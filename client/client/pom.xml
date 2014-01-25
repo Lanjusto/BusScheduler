@@ -16,10 +16,10 @@
     <description>Клиентская часть</description>
 
     <dependencies>
-        <!--<dependency>
+        <dependency>
             <groupId>ru.lanjusto.busscheduler</groupId>
             <artifactId>common-model</artifactId>
-        </dependency>-->
+        </dependency>
         <!-- 3rd part dependencies -->
     </dependencies>
 </project>

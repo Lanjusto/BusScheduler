@@ -3,6 +3,7 @@ package ru.lanjusto.busscheduler.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
+import ru.lanjusto.busscheduler.client.Client;
 //import ru.lanjusto.busscheduler.client.Client;
 
 public class RouteActivity extends Activity {
@@ -16,6 +17,6 @@ public class RouteActivity extends Activity {
 
         ((TextView) findViewById(R.id.routeNum)).setText("Троллейбус 78");
 
-        //new Client().getRoutes();
+        new Client().getRoutes();
     }
 }
