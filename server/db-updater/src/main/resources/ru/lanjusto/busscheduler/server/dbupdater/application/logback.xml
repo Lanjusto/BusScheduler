@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <appender name="StdOut" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %-40logger{40} : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="StdOut" />
+    </root>
+
+    <logger name="org.hibernate" level="WARN">
+        <appender-ref ref="StdOut" />
+    </logger>
+</configuration>
