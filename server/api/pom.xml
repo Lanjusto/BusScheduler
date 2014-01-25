@@ -45,6 +45,10 @@
             <artifactId>guice</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>annotations</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.wideplay.warp</groupId>
             <artifactId>persist</artifactId>
         </dependency>
