@@ -1,4 +1,4 @@
-package ru.lanjusto.busscheduler.server.dbupdater.converter;
+package ru.lanjusto.busscheduler.server.api.converter;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,13 +1,13 @@
-package ru.lanjusto.busscheduler.server.dbupdater.timetablegetter.mgt.org;
+package ru.lanjusto.busscheduler.server.api.timetable.timetablegetter.mgt.org;
 
-import ru.lanjusto.busscheduler.server.dbupdater.browser.HtmlParser;
-import ru.lanjusto.busscheduler.server.dbupdater.converter.Converter;
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import ru.lanjusto.busscheduler.common.utils.Assert;
 import ru.lanjusto.busscheduler.common.model.Time;
 import ru.lanjusto.busscheduler.common.model.Timetable;
+import ru.lanjusto.busscheduler.common.utils.Assert;
+import ru.lanjusto.busscheduler.server.api.browser.HtmlParser;
+import ru.lanjusto.busscheduler.server.api.converter.Converter;
 
 import java.util.ArrayList;
 import java.util.List;

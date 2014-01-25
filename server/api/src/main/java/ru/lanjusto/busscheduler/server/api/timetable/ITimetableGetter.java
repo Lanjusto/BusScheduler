@@ -1,4 +1,4 @@
-package ru.lanjusto.busscheduler.server.dbupdater;
+package ru.lanjusto.busscheduler.server.api.timetable;
 
 import org.jetbrains.annotations.NotNull;
 import ru.lanjusto.busscheduler.common.model.Route;

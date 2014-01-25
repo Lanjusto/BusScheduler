@@ -1,10 +1,10 @@
-package ru.lanjusto.busscheduler.server.dbupdater.timetablegetter.mgt.org;
+package ru.lanjusto.busscheduler.server.api.timetable.timetablegetter.mgt.org;
 
 import org.jetbrains.annotations.NotNull;
-import ru.lanjusto.busscheduler.server.dbupdater.ITimetableGetter;
-import ru.lanjusto.busscheduler.server.dbupdater.browser.Browser;
 import ru.lanjusto.busscheduler.common.model.Route;
 import ru.lanjusto.busscheduler.common.model.Timetable;
+import ru.lanjusto.busscheduler.server.api.browser.Browser;
+import ru.lanjusto.busscheduler.server.api.timetable.ITimetableGetter;
 
 import java.io.IOException;
 
