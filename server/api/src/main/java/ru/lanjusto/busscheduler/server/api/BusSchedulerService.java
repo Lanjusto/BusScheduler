@@ -15,9 +15,6 @@ import org.restlet.security.MapVerifier;
 import ru.lanjusto.busscheduler.server.api.restlets.RouteRestlet;
 import ru.lanjusto.busscheduler.server.api.restlets.RoutesListRestlet;
 
-/**
- * Created by estroykov on 07.01.14.
- */
 public class BusSchedulerService extends Application {
     public static void main(String[] args) throws Exception {
         //new Server(Protocol.HTTP, 8182, BusSchedulerService.class).start();

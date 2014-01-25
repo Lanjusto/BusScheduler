@@ -12,9 +12,6 @@ import ru.lanjusto.busscheduler.server.api.IDataProvider;
 
 import java.util.List;
 
-/**
- * Created by estroykov on 19.01.14.
- */
 public class RouteRestlet extends Restlet {
     private final IDataProvider dataProvider;
 

@@ -13,9 +13,6 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by estroykov on 18.01.14.
- */
 @Singleton
 public class DataProvider implements IDataProvider {
     private final Cache<String, List<Route>> routesCache;
