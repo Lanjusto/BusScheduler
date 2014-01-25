@@ -32,21 +32,4 @@ public class Browser {
             reader.close();
         }
     }
-
-    public static URL getUrlAfterRedirecting(@NotNull String url) throws IOException {
-        final URL urlUrl = new URL(url);
-        final HttpURLConnection urlConnection = (HttpURLConnection) urlUrl.openConnection();
-        /*switch (urlConnection.getResponseCode()) {
-            case HttpURLConnection.HTTP_OK:
-            case HttpURLConnection.HTTP_UNAVAILABLE:
-                break;
-            default:
-                System.err.println(url);
-                System.err.println(urlConnection.getResponseCode());
-                System.err.println(urlConnection.getURL());
-                Assert.fail();
-        }*/
-        urlConnection.getResponseCode();
-        return urlConnection.getURL();
-    }
 }

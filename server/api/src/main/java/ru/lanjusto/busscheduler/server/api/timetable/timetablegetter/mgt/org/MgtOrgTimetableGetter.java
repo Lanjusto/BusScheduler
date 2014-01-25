@@ -16,6 +16,7 @@ class MgtOrgTimetableGetter implements ITimetableGetter {
 
     @NotNull
     public Timetable get(@NotNull Route route) {
+        //TODO формировать адрес в зависимости от маршрута
         final String url = "http://www.mosgortrans.org/pass3/shedule.php?type=trol&way=78&date=1111100&direction=BA&waypoint=0";
 
         final String content;
