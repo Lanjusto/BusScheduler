@@ -45,11 +45,11 @@
 
     <dependencyManagement>
         <dependencies>
-            <!--<dependency>
+            <dependency>
                 <groupId>ru.lanjusto.busscheduler</groupId>
                 <artifactId>common-model</artifactId>
                 <version>${project.version}</version>
-            </dependency>-->
+            </dependency>
             <!-- 3rd party deps -->
         </dependencies>
     </dependencyManagement>
