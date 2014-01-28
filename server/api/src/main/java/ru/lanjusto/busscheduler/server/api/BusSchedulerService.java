@@ -12,6 +12,7 @@ import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.security.MapVerifier;
+import ru.lanjusto.busscheduler.common.utils.CommonData;
 import ru.lanjusto.busscheduler.server.api.restlets.RouteRestlet;
 import ru.lanjusto.busscheduler.server.api.restlets.RoutesListRestlet;
 
@@ -21,7 +22,7 @@ public class BusSchedulerService extends Application {
 
         // Create a component
         final Component component = new Component();
-        component.getServers().add(Protocol.HTTP, 8182);
+        component.getServers().add(Protocol.HTTP, CommonData.PORT);
         component.getClients().add(Protocol.FILE);
 
         // Create an application
@@ -55,12 +56,12 @@ public class BusSchedulerService extends Application {
         //router.attach("/docs/", guard).setMatchingMode(Template.MODE_STARTS_WITH);
 
         // Create a directory able to expose a hierarchy of files
-        final Directory directory = new Directory(getContext(), "localhost:8182");
+        final Directory directory = new Directory(getContext(), CommonData.URL);
         guard.setNext(directory);
 
         // Create the routesRestlet handler
-        final Restlet routesListHandler = new RoutesListRestlet(dataProvider);
-        final Restlet routeHandler = new RouteRestlet(dataProvider);
+        final Restlet routesListRestlet = new RoutesListRestlet(dataProvider);
+        final Restlet routeRestlet = new RouteRestlet(dataProvider);
 
 
         // Create the orders handler
@@ -87,16 +88,16 @@ public class BusSchedulerService extends Application {
         };*/
 
         // Attach the restlets to the root router
-        router.attach("/routes", routesListHandler);
-        router.attach("/routes/", routesListHandler);
-        router.attach("/routes/{routeId}/", routeHandler);
-        router.attach("/routes/{routeId}", routeHandler);
-        /*router.attach("/users/{user}", routesHandler);
-        router.attach("/users/{user}/orders", orders);
-        router.attach("/users/{user}/orders/{order}", order);*/
+        attach(router, CommonData.ROUTES_PAGE, routesListRestlet);
+        attach(router, CommonData.ROUTE_PAGE, routeRestlet);
 
         // Return the root router
         return router;
+    }
+
+    private void attach(@NotNull Router router, @NotNull String url, @NotNull Restlet restlet) {
+        router.attach(url, restlet);
+        router.attach(url + "/", restlet);
     }
 
 }

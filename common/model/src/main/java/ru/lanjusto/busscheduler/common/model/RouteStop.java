@@ -61,6 +61,14 @@ public class RouteStop {
         this.order = order;
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
     public void setOnRequest(boolean isOnRequest) {
         this.onRequest = isOnRequest;
     }
@@ -71,6 +79,11 @@ public class RouteStop {
 
     public Stop getStop() {
         return stop;
+    }
+
+    @Override
+    public String toString() {
+        return getDirection() + ": " + getOrder() +  ": " + getStop().getName() + " (" + getStop().getCoordinates() + ")";
     }
 }
 

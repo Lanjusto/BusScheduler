@@ -12,6 +12,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <restlet.version>2.1.6</restlet.version>
+    </properties>
+
     <artifactId>android-app</artifactId>
     <packaging>apk</packaging>
     <name>BusScheduler Android App</name>
@@ -103,17 +107,57 @@
         </profile>
     </profiles>
 
+    <repositories>
+        <repository>
+            <id>maven-restlet</id>
+            <name>Public online Restlet repository</name>
+            <url>http://maven.restlet.org</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>ru.lanjusto.busscheduler</groupId>
-            <artifactId>client-api</artifactId>
+            <artifactId>common-model</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>stax</groupId>
+                    <artifactId>stax-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xmlpull</groupId>
+                    <artifactId>xmlpull</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+        <!-- 3rd party dependencies -->
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
             <scope>provided</scope>
             <version>${android.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.android</groupId>
+            <artifactId>org.restlet</artifactId>
+            <version>${restlet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.android</groupId>
+            <artifactId>org.restlet.ext.ssl</artifactId>
+            <version>${restlet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.android</groupId>
+            <artifactId>org.restlet.ext.net</artifactId>
+            <version>${restlet.version}</version>
         </dependency>
     </dependencies>
 </project>
