@@ -11,8 +11,8 @@ import java.io.IOException;
 /**
  * Расписания с сайта <a href="www.mosgortrans.org">www.mosgortrans.org</a>
  */
-class MgtOrgTimetableGetter implements ITimetableGetter {
-    private final String url = "http://www.mosgortrans.org/pass3";
+public class MgtOrgTimetableGetter implements ITimetableGetter {
+    private final String URL = "http://www.mosgortrans.org/pass3";
 
     @NotNull
     public Timetable get(@NotNull Route route) {

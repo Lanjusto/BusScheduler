@@ -11,9 +11,11 @@ public abstract class CommonData {
 
     public static String ROUTES_PAGE = "/routes";
     public static String ROUTE_PAGE = "/routes/{routeId}";
+    public static String TIMETABLE_PAGE = "/routes/{routeId}/timetable";
 
     public static String ROUTES_URL = HTTP_PREFIX + URL + ROUTES_PAGE;
     public static String ROUTE_URL = HTTP_PREFIX + URL + ROUTE_PAGE;
+    public static String TIMETABLE_URL = HTTP_PREFIX + URL + TIMETABLE_PAGE;
 
     public static HierarchicalStreamDriver getXStreamDriver() {
         //return new JettisonMappedXmlDriver();

@@ -4,6 +4,7 @@ import com.google.inject.ImplementedBy;
 import org.jetbrains.annotations.NotNull;
 import ru.lanjusto.busscheduler.common.model.Route;
 import ru.lanjusto.busscheduler.common.model.RouteStop;
+import ru.lanjusto.busscheduler.common.model.Timetable;
 
 import java.util.List;
 
@@ -14,4 +15,7 @@ public interface IDataProvider {
 
     @NotNull
     List<RouteStop> getRouteStops(long routeId);
+
+    @NotNull
+    Timetable getTimeTable(long routeId);
 }

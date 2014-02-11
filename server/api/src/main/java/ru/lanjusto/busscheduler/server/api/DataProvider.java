@@ -8,6 +8,9 @@ import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import ru.lanjusto.busscheduler.common.model.Route;
 import ru.lanjusto.busscheduler.common.model.RouteStop;
+import ru.lanjusto.busscheduler.common.model.Timetable;
+import ru.lanjusto.busscheduler.server.api.timetable.GeneralTimetableGetter;
+import ru.lanjusto.busscheduler.server.api.timetable.ITimetableGetter;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -19,10 +22,12 @@ public class DataProvider implements IDataProvider {
     private final Cache<Long, List<RouteStop>> routeStopsCache;
 
     private final Provider<EntityManager> em;
+    private final ITimetableGetter timetableGetter;
 
     @Inject
     public DataProvider(@NotNull Provider<EntityManager> em) {
         this.em = em;
+        this.timetableGetter = new GeneralTimetableGetter();
         routesCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(5, TimeUnit.MINUTES)
                 .build();
@@ -63,6 +68,12 @@ public class DataProvider implements IDataProvider {
                 .getResultList();
         routeStopsCache.put(routeId, routeStops);
         return routeStops;
+    }
+
+    @NotNull
+    @Override
+    public Timetable getTimeTable(long routeId) {
+        return timetableGetter.get(getRouteById(routeId));
     }
 
     @NotNull

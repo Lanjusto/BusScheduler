@@ -15,6 +15,7 @@ import org.restlet.security.MapVerifier;
 import ru.lanjusto.busscheduler.common.utils.CommonData;
 import ru.lanjusto.busscheduler.server.api.restlets.RouteRestlet;
 import ru.lanjusto.busscheduler.server.api.restlets.RoutesListRestlet;
+import ru.lanjusto.busscheduler.server.api.restlets.TimeTableRestlet;
 
 public class BusSchedulerService extends Application {
     public static void main(String[] args) throws Exception {
@@ -38,6 +39,9 @@ public class BusSchedulerService extends Application {
     @Inject
     public BusSchedulerService(@NotNull IDataProvider dataProvider) {
         this.dataProvider = dataProvider;
+
+        System.setProperty("http.proxyHost", "proxy.custis.ru");
+        System.setProperty("http.proxyPort", "3128");
     }
 
     @Override
@@ -62,34 +66,12 @@ public class BusSchedulerService extends Application {
         // Create the routesRestlet handler
         final Restlet routesListRestlet = new RoutesListRestlet(dataProvider);
         final Restlet routeRestlet = new RouteRestlet(dataProvider);
-
-
-        // Create the orders handler
-       /* final Restlet orders = new Restlet(getContext()) {
-            @Override
-            public void handle(Request request, Response response) {
-                // Print the user name of the requested orders
-                String message = "Orders of user \"" + request.getAttributes().get("user") + "\"";
-                response.setEntity(message, MediaType.TEXT_PLAIN);
-            }
-        };
-
-        // Create the order handler
-        Restlet order = new Restlet(getContext()) {
-            @Override
-            public void handle(Request request, Response response) {
-                // Print the user name of the requested orders
-                String message = "Order \""
-                                 + request.getAttributes().get("order")
-                                 + "\" for user \""
-                                 + request.getAttributes().get("user") + "\"";
-                response.setEntity(message, MediaType.TEXT_PLAIN);
-            }
-        };*/
+        final Restlet timeTableRestlet = new TimeTableRestlet(dataProvider);
 
         // Attach the restlets to the root router
         attach(router, CommonData.ROUTES_PAGE, routesListRestlet);
         attach(router, CommonData.ROUTE_PAGE, routeRestlet);
+        attach(router, CommonData.TIMETABLE_PAGE, timeTableRestlet);
 
         // Return the root router
         return router;
