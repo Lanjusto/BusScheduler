@@ -11,6 +11,7 @@ import ru.lanjusto.busscheduler.common.model.RouteStop;
 import ru.lanjusto.busscheduler.common.model.Timetable;
 import ru.lanjusto.busscheduler.server.api.timetable.GeneralTimetableGetter;
 import ru.lanjusto.busscheduler.server.api.timetable.ITimetableGetter;
+import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailable;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -19,7 +20,8 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class DataProvider implements IDataProvider {
     private final Cache<String, List<Route>> routesCache;
-    private final Cache<Long, List<RouteStop>> routeStopsCache;
+    private final Cache<Long, List<RouteStop>> routeStopsByRouteCache;
+    private final Cache<Long, RouteStop> routeStopCache;
 
     private final Provider<EntityManager> em;
     private final ITimetableGetter timetableGetter;
@@ -31,7 +33,10 @@ public class DataProvider implements IDataProvider {
         routesCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(5, TimeUnit.MINUTES)
                 .build();
-        routeStopsCache = CacheBuilder.newBuilder()
+        routeStopsByRouteCache = CacheBuilder.newBuilder()
+                .expireAfterWrite(5, TimeUnit.MINUTES)
+                .build();
+        routeStopCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(5, TimeUnit.MINUTES)
                 .build();
     }
@@ -56,7 +61,7 @@ public class DataProvider implements IDataProvider {
     @Override
     @NotNull
     public List<RouteStop> getRouteStops(long routeId) {
-        final List<RouteStop> cachedList = routeStopsCache.getIfPresent(routeId);
+        final List<RouteStop> cachedList = routeStopsByRouteCache.getIfPresent(routeId);
         if (cachedList != null) {
             return cachedList;
         }
@@ -66,14 +71,15 @@ public class DataProvider implements IDataProvider {
                 .createQuery("SELECT rs FROM RouteStop rs WHERE rs.route = :route", RouteStop.class)
                 .setParameter("route", route)
                 .getResultList();
-        routeStopsCache.put(routeId, routeStops);
+        routeStopsByRouteCache.put(routeId, routeStops);
         return routeStops;
     }
 
     @NotNull
     @Override
-    public Timetable getTimeTable(long routeId) {
-        return timetableGetter.get(getRouteById(routeId));
+    public Timetable getTimeTable(long routeStopId) throws NoTimetableAvailable {
+        return timetableGetter.get(getRouteStopById(routeStopId));
+
     }
 
     @NotNull
@@ -85,5 +91,32 @@ public class DataProvider implements IDataProvider {
             }
         }
         throw new IllegalArgumentException();
+    }
+
+    @NotNull
+    private RouteStop getRouteStopById(long id) {
+        final RouteStop cachedRouteStop = routeStopCache.getIfPresent(id);
+        if (cachedRouteStop != null) {
+            return cachedRouteStop;
+        }
+
+        final RouteStop routeStop = em.get()
+                .createQuery("SELECT rs FROM RouteStop rs WHERE rs.id = :id", RouteStop.class)
+                .setParameter("id", id)
+                .getSingleResult();
+        routeStopCache.put(id, routeStop);
+        return routeStop;
+    }
+
+    @NotNull
+    private List<RouteStop> getRouteStops() {
+        final List<RouteStop> routeStops = em.get()
+                .createQuery("SELECT rs FROM RouteStop rse WHERE ", RouteStop.class)
+                .getResultList();
+
+        for (RouteStop routeStop : routeStops) {
+            routeStopCache.put(routeStop.getId(), routeStop);
+        }
+        return routeStops;
     }
 }

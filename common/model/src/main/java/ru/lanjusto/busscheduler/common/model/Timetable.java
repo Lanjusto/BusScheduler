@@ -12,7 +12,7 @@ public class Timetable {
         this.timeList = timeList;
     }
 
-    private List<Time> getTimeList() {
+    public List<Time> getTimeList() {
         return timeList;
     }
 

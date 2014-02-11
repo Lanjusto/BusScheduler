@@ -1,7 +1,7 @@
 package ru.lanjusto.busscheduler.server.api.timetable;
 
 import org.jetbrains.annotations.NotNull;
-import ru.lanjusto.busscheduler.common.model.Route;
+import ru.lanjusto.busscheduler.common.model.RouteStop;
 import ru.lanjusto.busscheduler.common.model.Timetable;
 import ru.lanjusto.busscheduler.server.api.timetable.timetablegetter.mgt.org.MgtOrgTimetableGetter;
 import ru.lanjusto.busscheduler.server.api.timetable.timetablegetter.mgt.ru.MgtRuTimetableGetter;
@@ -17,11 +17,11 @@ public class GeneralTimetableGetter implements ITimetableGetter {
 
     @NotNull
     @Override
-    public Timetable get(@NotNull Route route) {
-        return orgGetter.get(route);
-
-        // if no data available then
-        //  return ruGetter.get(route);
-
+    public Timetable get(@NotNull RouteStop routeStop) throws NoTimetableAvailable {
+        try {
+            return orgGetter.get(routeStop);
+        } catch (NoTimetableAvailable e) {
+            return ruGetter.get(routeStop);
+        }
     }
 }

@@ -2,6 +2,7 @@ package ru.lanjusto.busscheduler.common.model;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 
@@ -47,14 +48,24 @@ public class RouteStop {
     //TODO время работы в скобках
 
 
+    public static RouteStop create(@NotNull Route route, @NotNull Stop stop, @NotNull Direction direction) {
+        final RouteStop routeStop = new RouteStop(route, stop, direction);
+        route.getRouteStops().add(routeStop);
+        return routeStop;
+    }
+
     protected RouteStop() {
 
     }
 
-    public RouteStop(Route route, Stop stop, Direction direction) {
+    private RouteStop(@NotNull Route route, @NotNull Stop stop, @NotNull Direction direction) {
         this.route = route;
         this.stop = stop;
         this.direction = direction;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public void setOrder(int order) {
@@ -81,9 +92,13 @@ public class RouteStop {
         return stop;
     }
 
+    public Route getRoute() {
+        return route;
+    }
+
     @Override
     public String toString() {
-        return getDirection() + ": " + getOrder() +  ": " + getStop().getName() + " (" + getStop().getCoordinates() + ")";
+        return getDirection() + ": " + getOrder() + ": " + getStop().getName() + " (" + getStop().getCoordinates() + ")";
     }
 }
 

@@ -4,6 +4,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Маршрут
@@ -31,6 +35,9 @@ public class Route {
     @Basic(optional = false)
     private String description;
 
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL)
+    private List<RouteStop> routeStops = new ArrayList<RouteStop>();
+
     protected Route() {
 
     }
@@ -55,6 +62,28 @@ public class Route {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<RouteStop> getRouteStops() {
+        return routeStops;
+    }
+
+    public List<RouteStop> getRouteStops(Direction direction) {
+        final List<RouteStop> resultList = new ArrayList<RouteStop>();
+        for (RouteStop routeStop : getRouteStops()) {
+            if (routeStop.getDirection() == direction) {
+                resultList.add(routeStop);
+            }
+        }
+
+        Collections.sort(resultList, new Comparator<RouteStop>() {
+            @Override
+            public int compare(RouteStop o1, RouteStop o2) {
+                return o1.getOrder() - o2.getOrder();
+            }
+        });
+
+        return routeStops;
     }
 
     @Override

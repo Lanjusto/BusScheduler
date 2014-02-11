@@ -7,6 +7,8 @@ import ru.lanjusto.busscheduler.common.utils.Assert;
  * Время
  */
 public class Time {
+    private final static int MINUTES_IN_HOUR = 60;
+
     private final int hours;
     private final int minutes;
 
@@ -24,6 +26,44 @@ public class Time {
 
     public int getMinutes() {
         return minutes;
+    }
+
+    public static int toMinutes(Time time) {
+        return time.getHours() * MINUTES_IN_HOUR + time.getMinutes();
+    }
+
+    public static Time fromMinutes(int minutes) {
+        final int h = minutes / MINUTES_IN_HOUR;
+        final int m = minutes - h * MINUTES_IN_HOUR;
+        return new Time(h, m);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Time)) {
+            return false;
+        }
+
+        Time time = (Time) o;
+
+        if (hours != time.hours) {
+            return false;
+        }
+        if (minutes != time.minutes) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = hours;
+        result = 31 * result + minutes;
+        return result;
     }
 
     @Override
