@@ -10,7 +10,7 @@ public class RoutesListRestlet extends AbstractRestlet {
     }
 
     @Override
-    protected Object handle(Long routeId) throws NoTimetableAvailable {
+    protected Object handle(RequestParameters parameters) throws NoTimetableAvailable {
         return dataProvider.getRoutes();
     }
 }

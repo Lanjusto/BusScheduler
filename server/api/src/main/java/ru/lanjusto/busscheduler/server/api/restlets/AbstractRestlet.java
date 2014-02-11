@@ -22,15 +22,17 @@ abstract class AbstractRestlet extends Restlet {
         this.dataProvider = dataProvider;
     }
 
-    protected abstract Object handle(Long routeId) throws NoTimetableAvailable;
+    protected abstract Object handle(RequestParameters requestParameters) throws NoTimetableAvailable;
 
     @Override
     public final void handle(Request request, Response response) {
-        final Long routeId = getRouteId(request);
+        final Long routeId = getAttributeAsLong(request, "routeId");
+        final Long routeStopId = getAttributeAsLong(request, "routeStopId");
+        final RequestParameters parameters = new RequestParameters(routeId, routeStopId);
 
         final Object result;
         try {
-            result = handle(routeId);
+            result = handle(parameters);
             packToXml(response, result);
         } catch (NoTimetableAvailable e) {
             response.setStatus(new Status(Status.CLIENT_ERROR_NOT_FOUND, e.getClass().getName()));
@@ -46,11 +48,6 @@ abstract class AbstractRestlet extends Restlet {
         xStream.alias("Time", Time.class);
 
         response.setEntity(xStream.toXML(object), MediaType.TEXT_PLAIN);
-    }
-
-    @Nullable
-    protected Long getRouteId(@NotNull Request request) {
-        return getAttributeAsLong(request, "routeId");
     }
 
     @Nullable
