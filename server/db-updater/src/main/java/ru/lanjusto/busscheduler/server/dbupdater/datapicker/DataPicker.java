@@ -291,12 +291,12 @@ class DataPicker implements IDataPicker {
                         }
                         final Stop stop = stopMap.get(stopUrl);
                         if (stopIsEnabledAB && order == 1) {
-                            final RouteStop rs = new RouteStop(route, stop, Direction.AB);
+                            final RouteStop rs = RouteStop.create(route, stop, Direction.AB);
                             abStops.add(rs);
                             lastStops.add(rs);
                         }
                         if (stopIsEnabledBA && order == 2) {
-                            final RouteStop rs = new RouteStop(route, stop, Direction.BA);
+                            final RouteStop rs = RouteStop.create(route, stop, Direction.BA);
                             baStops.add(rs);
                             lastStops.add(rs);
                         }
