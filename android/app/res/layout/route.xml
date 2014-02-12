@@ -9,7 +9,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/routeNum"
             android:text="Троллейбус 78"
-            android:textSize="75sp"
+            android:textSize="45sp"
             />
     <TextView
             android:layout_width="wrap_content"

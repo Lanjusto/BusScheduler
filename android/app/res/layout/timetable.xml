@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Тб 78: Белорусский вокзал — Вагоноремонтная улица"
+                android:textSize="45sp"
+                />
+        <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <Button
+                    android:id="@+id/btnPrev"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/arrow_up"
+                    android:rotation="-90"
+                    android:layout_gravity="left" />
+            <TextView
+                    android:id="@+id/txtCurr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:text="Савёловский вокзал"
+                    android:layout_gravity="center"
+                    android:textSize="25sp" />
+            <Button
+                    android:id="@+id/btnNext"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/arrow_up"
+                    android:rotation="90"
+                    android:layout_gravity="right" />
+        </FrameLayout>
+        <RadioGroup
+                android:id="@+id/radioGroup1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <RadioButton
+                    android:id="@+id/optNow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/toggle_button_selector"
+                    android:button="@null"
+                    android:checked="true"
+                    android:text="@string/Now"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    />
+            <RadioButton
+                    android:id="@+id/optOnWorkDays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/toggle_button_selector"
+                    android:button="@null"
+                    android:text="@string/OnWorkDays"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+            <RadioButton
+                    android:id="@+id/optOnWeekend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/toggle_button_selector"
+                    android:button="@null"
+                    android:text="@string/OnWeekend"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+        </RadioGroup>
+        <ListView
+                android:id="@+id/lstTimetable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+        </ListView>
+    </LinearLayout>
+    <TextView
+            android:layout_width="wrap_content"
+            android:text="Disclaimer"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:textSize="25sp"
+            />
+</FrameLayout>

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Bus Scheduler</string>
+    <string name="OnWeekend">По выходным</string>
+    <string name="OnWorkDays">По будням</string>
+    <string name="Now">Ближайшие</string>
 </resources>
