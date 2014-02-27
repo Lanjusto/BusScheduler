@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.lanjusto.busscheduler.common.model.Route;
 import ru.lanjusto.busscheduler.common.model.RouteStop;
 import ru.lanjusto.busscheduler.common.model.Timetable;
-import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailable;
+import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailableException;
 
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface IDataProvider {
     List<RouteStop> getRouteStops(long routeId);
 
     @NotNull
-    Timetable getTimeTable(long routeId) throws NoTimetableAvailable;
+    Timetable getTimeTable(long routeId) throws NoTimetableAvailableException;
 }

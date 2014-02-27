@@ -9,7 +9,7 @@ import ru.lanjusto.busscheduler.common.model.Stop;
 import ru.lanjusto.busscheduler.common.model.Timetable;
 import ru.lanjusto.busscheduler.common.model.VehicleType;
 import ru.lanjusto.busscheduler.server.api.timetable.ITimetableGetter;
-import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailable;
+import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailableException;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,29 +26,29 @@ public class MgtOrgTimetableGetterTest {
 
 
     @Test
-    public void simpleTest01() throws NoTimetableAvailable {
+    public void simpleTest01() throws NoTimetableAvailableException {
         simpleTest("Савеловский вокз.");
     }
 
     @Test
-    public void simpleTest02() throws NoTimetableAvailable {
+    public void simpleTest02() throws NoTimetableAvailableException {
         //  то же самое, но название остановки как у нас в базе
         simpleTest("Савёловский вокзал");
         simpleTest("Кинотеатр «Ереван»");
     }
 
     @Test
-    public void simpleTest03() throws NoTimetableAvailable {
+    public void simpleTest03() throws NoTimetableAvailableException {
         //  интерполяция
         //TODO
         //simpleTest("Метро «Тимирязевская»");
     }
 
-    private void simpleTest(String routeStopName) throws NoTimetableAvailable {
+    private void simpleTest(String routeStopName) throws NoTimetableAvailableException {
         simpleTest(routeStopName, Collections.<String>emptyList());
     }
 
-    private void simpleTest(String routeStopName, List<String> otherRouteStops) throws NoTimetableAvailable {
+    private void simpleTest(String routeStopName, List<String> otherRouteStops) throws NoTimetableAvailableException {
         final ITimetableGetter timetableGetter = new MgtOrgTimetableGetter();
         final Route route = new Route(VehicleType.TROLLEYBUS, "78");
         final Stop stop = new Stop(routeStopName, null);

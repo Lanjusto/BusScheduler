@@ -17,10 +17,10 @@ public class GeneralTimetableGetter implements ITimetableGetter {
 
     @NotNull
     @Override
-    public Timetable get(@NotNull RouteStop routeStop) throws NoTimetableAvailable {
+    public Timetable get(@NotNull RouteStop routeStop) throws NoTimetableAvailableException {
         try {
             return orgGetter.get(routeStop);
-        } catch (NoTimetableAvailable e) {
+        } catch (NoTimetableAvailableException e) {
             return ruGetter.get(routeStop);
         }
     }

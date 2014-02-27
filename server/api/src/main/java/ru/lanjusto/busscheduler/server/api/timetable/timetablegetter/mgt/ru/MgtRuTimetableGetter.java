@@ -4,12 +4,12 @@ import org.jetbrains.annotations.NotNull;
 import ru.lanjusto.busscheduler.common.model.RouteStop;
 import ru.lanjusto.busscheduler.common.model.Timetable;
 import ru.lanjusto.busscheduler.server.api.timetable.ITimetableGetter;
-import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailable;
+import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailableException;
 
 public class MgtRuTimetableGetter implements ITimetableGetter {
     @NotNull
     @Override
-    public Timetable get(@NotNull RouteStop routeStop) throws NoTimetableAvailable {
-        throw new NoTimetableAvailable();
+    public Timetable get(@NotNull RouteStop routeStop) throws NoTimetableAvailableException {
+        throw new NoTimetableAvailableException();
     }
 }

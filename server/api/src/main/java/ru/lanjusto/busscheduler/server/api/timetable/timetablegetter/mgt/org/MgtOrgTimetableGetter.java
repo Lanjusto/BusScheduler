@@ -16,7 +16,7 @@ import ru.lanjusto.busscheduler.server.api.service.GeoService;
 import ru.lanjusto.busscheduler.server.api.service.RouteService;
 import ru.lanjusto.busscheduler.server.api.service.TimetableService;
 import ru.lanjusto.busscheduler.server.api.timetable.ITimetableGetter;
-import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailable;
+import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailableException;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -31,7 +31,7 @@ public class MgtOrgTimetableGetter implements ITimetableGetter {
     final Logger log = LoggerFactory.getLogger(MgtOrgTimetableGetter.class);
 
     @NotNull
-    public Timetable get(@NotNull RouteStop routeStop) throws NoTimetableAvailable {
+    public Timetable get(@NotNull RouteStop routeStop) throws NoTimetableAvailableException {
         final String url = getUrl(routeStop);
         log.info("Getting timetable for {} on {}.", routeStop, url);
 
@@ -40,7 +40,7 @@ public class MgtOrgTimetableGetter implements ITimetableGetter {
             content = Browser.getContent(url);
 
             if (content.contains("Не удалось открыть файл ресурсов. Расписание недоступно")) {
-                throw new NoTimetableAvailable();
+                throw new NoTimetableAvailableException();
             }
 
             final Map<String, String> map = getMap(content);

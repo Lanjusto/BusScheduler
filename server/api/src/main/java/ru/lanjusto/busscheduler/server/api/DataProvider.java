@@ -11,7 +11,7 @@ import ru.lanjusto.busscheduler.common.model.RouteStop;
 import ru.lanjusto.busscheduler.common.model.Timetable;
 import ru.lanjusto.busscheduler.server.api.timetable.GeneralTimetableGetter;
 import ru.lanjusto.busscheduler.server.api.timetable.ITimetableGetter;
-import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailable;
+import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailableException;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -77,7 +77,7 @@ public class DataProvider implements IDataProvider {
 
     @NotNull
     @Override
-    public Timetable getTimeTable(long routeStopId) throws NoTimetableAvailable {
+    public Timetable getTimeTable(long routeStopId) throws NoTimetableAvailableException {
         return timetableGetter.get(getRouteStopById(routeStopId));
 
     }

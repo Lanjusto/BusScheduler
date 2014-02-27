@@ -13,7 +13,7 @@ import ru.lanjusto.busscheduler.common.model.Time;
 import ru.lanjusto.busscheduler.common.model.Timetable;
 import ru.lanjusto.busscheduler.common.utils.CommonData;
 import ru.lanjusto.busscheduler.server.api.IDataProvider;
-import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailable;
+import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailableException;
 
 abstract class AbstractRestlet extends Restlet {
     protected final IDataProvider dataProvider;
@@ -22,7 +22,7 @@ abstract class AbstractRestlet extends Restlet {
         this.dataProvider = dataProvider;
     }
 
-    protected abstract Object handle(RequestParameters requestParameters) throws NoTimetableAvailable;
+    protected abstract Object handle(RequestParameters requestParameters) throws NoTimetableAvailableException;
 
     @Override
     public final void handle(Request request, Response response) {
@@ -34,7 +34,7 @@ abstract class AbstractRestlet extends Restlet {
         try {
             result = handle(parameters);
             packToXml(response, result);
-        } catch (NoTimetableAvailable e) {
+        } catch (NoTimetableAvailableException e) {
             response.setStatus(new Status(Status.CLIENT_ERROR_NOT_FOUND, e.getClass().getName()));
         }
     }
