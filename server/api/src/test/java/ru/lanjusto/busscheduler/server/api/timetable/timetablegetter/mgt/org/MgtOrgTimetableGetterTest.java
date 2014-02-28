@@ -8,6 +8,7 @@ import ru.lanjusto.busscheduler.common.model.RouteStop;
 import ru.lanjusto.busscheduler.common.model.Stop;
 import ru.lanjusto.busscheduler.common.model.Timetable;
 import ru.lanjusto.busscheduler.common.model.VehicleType;
+import ru.lanjusto.busscheduler.server.api.timetable.Day;
 import ru.lanjusto.busscheduler.server.api.timetable.ITimetableGetter;
 import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailableException;
 
@@ -45,16 +46,17 @@ public class MgtOrgTimetableGetterTest {
     }
 
     private void simpleTest(String routeStopName) throws NoTimetableAvailableException {
-        simpleTest(routeStopName, Collections.<String>emptyList());
+        simpleTest(routeStopName, Day.WORKDAY, Collections.<String>emptyList());
+        simpleTest(routeStopName, Day.WEEKEND, Collections.<String>emptyList());
     }
 
-    private void simpleTest(String routeStopName, List<String> otherRouteStops) throws NoTimetableAvailableException {
+    private void simpleTest(String routeStopName, Day day, List<String> otherRouteStops) throws NoTimetableAvailableException {
         final ITimetableGetter timetableGetter = new MgtOrgTimetableGetter();
         final Route route = new Route(VehicleType.TROLLEYBUS, "78");
         final Stop stop = new Stop(routeStopName, null);
 
         final RouteStop routeStop = RouteStop.create(route, stop, Direction.AB);
-        final Timetable timetable = timetableGetter.get(routeStop);
+        final Timetable timetable = timetableGetter.get(routeStop, day);
 
         System.out.println(timetable);
     }

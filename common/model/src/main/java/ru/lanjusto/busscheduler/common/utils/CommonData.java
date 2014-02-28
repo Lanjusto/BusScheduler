@@ -11,7 +11,7 @@ public abstract class CommonData {
 
     public static String ROUTES_PAGE = "/routes";
     public static String ROUTE_PAGE = "/routes/{routeId}";
-    public static String TIMETABLE_PAGE = "/timetable/{routeStopId}";
+    public static String TIMETABLE_PAGE = "/timetable/{routeStopId}/{timeTableKind}";
 
     public static String ROUTES_URL = HTTP_PREFIX + URL + ROUTES_PAGE;
     public static String ROUTE_URL = HTTP_PREFIX + URL + ROUTE_PAGE;

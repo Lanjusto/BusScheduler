@@ -12,6 +12,12 @@ public class Time {
     private final int hours;
     private final int minutes;
 
+    public static Time fromString(String s) {
+        final int h = Integer.valueOf(s.substring(0, 2));
+        final int m = Integer.valueOf(s.substring(3, 5));
+        return new Time(h, m);
+    }
+
     public Time(int hours, int minutes) {
         Assert.isTrue(hours >= 0 && hours <= 23);
         Assert.isTrue(minutes >= 0 && minutes <= 59);

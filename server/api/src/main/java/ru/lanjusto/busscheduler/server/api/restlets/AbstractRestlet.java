@@ -11,6 +11,7 @@ import org.restlet.data.Status;
 import ru.lanjusto.busscheduler.common.model.Route;
 import ru.lanjusto.busscheduler.common.model.Time;
 import ru.lanjusto.busscheduler.common.model.Timetable;
+import ru.lanjusto.busscheduler.common.model.TimetableKind;
 import ru.lanjusto.busscheduler.common.utils.CommonData;
 import ru.lanjusto.busscheduler.server.api.IDataProvider;
 import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailableException;
@@ -28,7 +29,8 @@ abstract class AbstractRestlet extends Restlet {
     public final void handle(Request request, Response response) {
         final Long routeId = getAttributeAsLong(request, "routeId");
         final Long routeStopId = getAttributeAsLong(request, "routeStopId");
-        final RequestParameters parameters = new RequestParameters(routeId, routeStopId);
+        final TimetableKind timeTableKind = getAttributeAsEnum(request, "timeTableKind", TimetableKind.class);
+        final RequestParameters parameters = new RequestParameters(routeId, routeStopId, timeTableKind);
 
         final Object result;
         try {
@@ -48,6 +50,16 @@ abstract class AbstractRestlet extends Restlet {
         xStream.alias("Time", Time.class);
 
         response.setEntity(xStream.toXML(object), MediaType.TEXT_PLAIN);
+    }
+
+    @Nullable
+    private <T extends Enum> T getAttributeAsEnum(@NotNull Request request, @NotNull String attributeName, Class<T> enumType) {
+        final String s = getAttributeAsString(request, attributeName);
+        if (s == null) {
+            return null;
+        } else {
+            return (T)Enum.valueOf(enumType, s);
+        }
     }
 
     @Nullable

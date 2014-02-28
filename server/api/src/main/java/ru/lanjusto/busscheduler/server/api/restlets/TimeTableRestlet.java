@@ -11,6 +11,6 @@ public class TimeTableRestlet extends AbstractRestlet {
 
     @Override
     protected Object handle(RequestParameters parameters) throws NoTimetableAvailableException {
-        return dataProvider.getTimeTable(parameters.getRouteStopId());
+        return dataProvider.getTimeTable(parameters.getRouteStopId(), parameters.getTimetableKind());
     }
 }

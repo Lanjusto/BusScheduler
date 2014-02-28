@@ -1,6 +1,7 @@
 package ru.lanjusto.busscheduler.server.api.timetable.timetablegetter.mgt.org;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +16,15 @@ import ru.lanjusto.busscheduler.server.api.browser.HtmlParser;
 import ru.lanjusto.busscheduler.server.api.service.GeoService;
 import ru.lanjusto.busscheduler.server.api.service.RouteService;
 import ru.lanjusto.busscheduler.server.api.service.TimetableService;
+import ru.lanjusto.busscheduler.server.api.timetable.Day;
 import ru.lanjusto.busscheduler.server.api.timetable.ITimetableGetter;
 import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailableException;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,33 +35,42 @@ public class MgtOrgTimetableGetter implements ITimetableGetter {
     final Logger log = LoggerFactory.getLogger(MgtOrgTimetableGetter.class);
 
     @NotNull
-    public Timetable get(@NotNull RouteStop routeStop) throws NoTimetableAvailableException {
-        final String url = getUrl(routeStop);
-        log.info("Getting timetable for {} on {}.", routeStop, url);
+    public Timetable get(@NotNull RouteStop routeStop, @NotNull Day day) throws NoTimetableAvailableException {
+        // У некоторых маршрутов расписание единое. Пробуем сначала найти по заданному дню, потом единое.
+        final List<String> urls = new ArrayList<String>();
+        urls.add(getUrl(routeStop, day));
+        urls.add(getUrl(routeStop, null));
 
-        final String content;
-        try {
-            content = Browser.getContent(url);
+        for (String url : urls) {
+            log.info("Getting timetable for {} on {}.", routeStop, url);
 
-            if (content.contains("Не удалось открыть файл ресурсов. Расписание недоступно")) {
-                throw new NoTimetableAvailableException();
-            }
-
-            final Map<String, String> map = getMap(content);
+            final String content;
             try {
-                final String routeStopTimetableBlock = getTimetableBlock(map, routeStop.getStop().getName());
-                return getTimetable(routeStopTimetableBlock);
-            } catch (NoRouteStopFound e) {
-                // Расписания по остановке нет. Делаем интерполяцию.
-                return makeInterpolation(map, routeStop);
+                content = Browser.getContent(url);
+
+                if (content.contains("Не удалось открыть файл ресурсов. Расписание недоступно")) {
+                    continue;
+                }
+
+                final Map<String, String> map = getMap(content);
+                try {
+                    final String routeStopTimetableBlock = getTimetableBlock(map, routeStop.getStop().getName());
+                    return getTimetable(routeStopTimetableBlock);
+                } catch (NoRouteStopFound e) {
+                    // Расписания по остановке нет. Делаем интерполяцию.
+                    return makeInterpolation(map, routeStop);
+                }
+            } catch (IOException e) {
+                //TODO
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            //TODO
-            throw new RuntimeException(e);
         }
+
+        // ничего не нашли
+        throw new NoTimetableAvailableException();
     }
 
-    private String getUrl(@NotNull RouteStop routeStop) {
+    private String getUrl(@NotNull RouteStop routeStop, @Nullable Day day) {
         final String routeType;
         final Route route = routeStop.getRoute();
         switch (route.getVehicleType()) {
@@ -74,12 +87,27 @@ public class MgtOrgTimetableGetter implements ITimetableGetter {
                 throw new IllegalArgumentException();
         }
         final Direction direction = routeStop.getDirection();
+        final String dayMask;
+        if (day == null) {
+            dayMask = "1111111";
+        } else {
+            switch (day) {
+                case WORKDAY:
+                    dayMask = "1111100";
+                    break;
+                case WEEKEND:
+                    dayMask = "0000011";
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
+        }
 
         return MessageFormat.format("{0}/shedule.php?type={1}&way={2}&date={3}&direction={4}&waypoint={5}",
                                     URL,
                                     routeType,
                                     route.getNum(),
-                                    "1111100",
+                                    dayMask,
                                     direction,
                                     "all");
     }

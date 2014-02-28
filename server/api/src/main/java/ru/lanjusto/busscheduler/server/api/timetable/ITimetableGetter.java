@@ -9,5 +9,5 @@ import ru.lanjusto.busscheduler.common.model.Timetable;
  */
 public interface ITimetableGetter {
     @NotNull
-    Timetable get(@NotNull RouteStop routeStop) throws NoTimetableAvailableException;
+    Timetable get(@NotNull RouteStop routeStop, @NotNull Day day) throws NoTimetableAvailableException;
 }

@@ -9,6 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import ru.lanjusto.busscheduler.common.model.Route;
 import ru.lanjusto.busscheduler.common.model.RouteStop;
 import ru.lanjusto.busscheduler.common.model.Timetable;
+import ru.lanjusto.busscheduler.common.model.TimetableKind;
+import ru.lanjusto.busscheduler.server.api.service.CalendarService;
+import ru.lanjusto.busscheduler.server.api.timetable.Day;
 import ru.lanjusto.busscheduler.server.api.timetable.GeneralTimetableGetter;
 import ru.lanjusto.busscheduler.server.api.timetable.ITimetableGetter;
 import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailableException;
@@ -77,8 +80,26 @@ public class DataProvider implements IDataProvider {
 
     @NotNull
     @Override
-    public Timetable getTimeTable(long routeStopId) throws NoTimetableAvailableException {
-        return timetableGetter.get(getRouteStopById(routeStopId));
+    public Timetable getTimeTable(long routeStopId, @NotNull TimetableKind timetableKind) throws NoTimetableAvailableException {
+        final Day day;
+        switch (timetableKind) {
+            case NOW:
+                day = CalendarService.getDay();
+                break;
+            case ON_WORKDAYS:
+                day = Day.WORKDAY;
+                break;
+            case ON_WEEKEND:
+                day = Day.WEEKEND;
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+
+        final Timetable timetable = timetableGetter.get(getRouteStopById(routeStopId), day);
+
+
+        return timetable;
 
     }
 

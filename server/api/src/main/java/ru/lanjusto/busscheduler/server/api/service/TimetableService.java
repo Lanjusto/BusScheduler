@@ -7,6 +7,8 @@ import ru.lanjusto.busscheduler.common.model.Timetable;
 import ru.lanjusto.busscheduler.common.utils.Assert;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class TimetableService {
@@ -34,5 +36,26 @@ public class TimetableService {
 
         int average = (int) ((q1 * Time.toMinutes(t1) + q2 * Time.toMinutes(t2)));
         return Time.fromMinutes(average);
+    }
+
+    public static Timetable sortTimes(@NotNull Timetable timetable) {
+        return sortTimes(timetable, Time.fromString("00:00"));
+    }
+
+    public static Timetable sortTimes(@NotNull Timetable timetable, @NotNull final Time startTime) {
+        final List<Time> times = new ArrayList<Time>(timetable.getTimeList());
+        Collections.sort(times, new Comparator<Time>() {
+            @Override
+            public int compare(Time o1, Time o2) {
+                int result = o1.getHours() - o2.getHours();
+                if (result != 0) {
+                    return result;
+                }
+
+                return o1.getMinutes() - o2.getMinutes();
+            }
+        });
+
+        return new Timetable(times);
     }
 }
