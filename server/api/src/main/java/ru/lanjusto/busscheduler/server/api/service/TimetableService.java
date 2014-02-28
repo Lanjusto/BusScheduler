@@ -47,12 +47,15 @@ public class TimetableService {
         Collections.sort(times, new Comparator<Time>() {
             @Override
             public int compare(Time o1, Time o2) {
-                int result = o1.getHours() - o2.getHours();
+                final Time t1 = o1.substract(startTime);
+                final Time t2 = o2.substract(startTime);
+
+                int result = t1.getHours() - t2.getHours();
                 if (result != 0) {
                     return result;
                 }
 
-                return o1.getMinutes() - o2.getMinutes();
+                return t1.getMinutes() - t2.getMinutes();
             }
         });
 
