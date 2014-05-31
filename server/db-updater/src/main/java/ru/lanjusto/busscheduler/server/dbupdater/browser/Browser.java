@@ -13,13 +13,14 @@ import java.nio.charset.Charset;
 /**
  * Типа, браузер
  */
+//todo вот вот - разбили проект по частям и приходится клонировать "Браузер"
 public class Browser {
     @NotNull
-    public static String getContent(@NotNull String url) throws IOException {
+    public static String getContent(@NotNull String url, Charset charset) throws IOException {
         final URL urlUrl = new URL(url);
         final HttpURLConnection urlConnection = (HttpURLConnection) urlUrl.openConnection();
         Assert.equals(urlConnection.getResponseCode(), HttpURLConnection.HTTP_OK);
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), Charset.forName("CP1251")));
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), charset));
 
         try {
             final StringBuilder sb = new StringBuilder();
@@ -49,4 +50,20 @@ public class Browser {
         urlConnection.getResponseCode();
         return urlConnection.getURL();
     }
+
+
+    public static String getAnswer(HttpURLConnection urlConnection) throws IOException {
+        //Assert.equals(urlConnection.getResponseCode(), HttpURLConnection.HTTP_OK);
+
+        final StringBuilder sb = new StringBuilder();
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
+            String inputLine;
+            while ((inputLine = reader.readLine()) != null) {
+                sb.append(inputLine);
+            }
+        }
+
+        return sb.toString();
+    }
+
 }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 
 /**
@@ -19,17 +20,14 @@ public class Browser {
         final URL urlUrl = new URL(url);
         final HttpURLConnection urlConnection = (HttpURLConnection) urlUrl.openConnection();
         Assert.equals(urlConnection.getResponseCode(), HttpURLConnection.HTTP_OK);
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), Charset.forName("CP1251")));
 
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), Charset.forName("CP1251")))) {
             final StringBuilder sb = new StringBuilder();
             String inputLine;
             while ((inputLine = reader.readLine()) != null) {
                 sb.append(inputLine);
             }
             return sb.toString();
-        } finally {
-            reader.close();
         }
     }
 }

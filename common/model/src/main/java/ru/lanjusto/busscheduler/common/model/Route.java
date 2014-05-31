@@ -4,10 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Маршрут
@@ -38,13 +35,43 @@ public class Route {
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL)
     private List<RouteStop> routeStops = new ArrayList<RouteStop>();
 
+    @Column(name = "city", nullable = false)
+    @Basic(optional = false)
+    @Enumerated(EnumType.STRING)
+    private City city;
+
+    @Column(name = "dtm_update")
+    @Basic
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTime;
+
+    /***
+     * Источник получения данных о маршруте. Нужно чтобы 2 источника не "перекрывались", ну и для истории
+     */
+    @Column(name = "source", nullable = false)
+    @Basic(optional = false)
+    private String source;
+
+
     protected Route() {
 
     }
 
-    public Route(@NotNull VehicleType vehicleType, @NotNull String num) {
+    public Route(VehicleType vehicleType, String num, City city, String source) {
         this.vehicleType = vehicleType;
         this.num = num;
+        this.city = city;
+        this.source = source;
+        this.updateTime = updateTime;
+    }
+
+    public Route(@NotNull VehicleType vehicleType, @NotNull String num, @NotNull String description, @NotNull City city, @NotNull String source) {
+        this.vehicleType = vehicleType;
+        this.num = num;
+        this.city = city;
+        this.updateTime = updateTime;
+        this.source = source;
+        this.description = description;
     }
 
     public long getId() {
@@ -86,6 +113,30 @@ public class Route {
         return routeStops;
     }
 
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
     @Override
     public String toString() {
         return getVehicleType() + " " + getNum();
@@ -101,6 +152,10 @@ public class Route {
         }
 
         Route route = (Route) o;
+
+        if (id == route.getId()) {
+            return true; //todo не уверен, что это всегда верно... Женя, посмотри
+        }
 
         if (!num.equals(route.num)) {
             return false;

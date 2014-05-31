@@ -13,6 +13,7 @@ public class RouteService {
         final int currentIndex = routeStopList.indexOf(routeStop);
 
         if (currentIndex == 0) {
+            //todo проверить круговые маршруты
             return null;
         } else {
             return routeStopList.get(currentIndex - 1);

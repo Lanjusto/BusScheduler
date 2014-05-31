@@ -12,13 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.lanjusto.busscheduler.common.model.Coordinates;
-import ru.lanjusto.busscheduler.common.model.Direction;
-import ru.lanjusto.busscheduler.common.model.Route;
-import ru.lanjusto.busscheduler.common.model.RouteStop;
-import ru.lanjusto.busscheduler.common.model.Stop;
-import ru.lanjusto.busscheduler.common.model.UrlCoordinates;
-import ru.lanjusto.busscheduler.common.model.VehicleType;
+import ru.lanjusto.busscheduler.common.model.*;
 import ru.lanjusto.busscheduler.common.utils.Assert;
 import ru.lanjusto.busscheduler.server.dbupdater.browser.Browser;
 import ru.lanjusto.busscheduler.server.dbupdater.browser.HtmlParser;
@@ -29,35 +23,30 @@ import javax.persistence.NoResultException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.Charset;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Наполнитель базы данных.
  */
-@Singleton
-class DataPicker implements IDataPicker {
+public class DataPicker implements IDataPicker {
     private final Logger log = LoggerFactory.getLogger(DataPicker.class);
     private final Map<String, Stop> stopMap = new HashMap<String, Stop>();
     private final Provider<EntityManager> em;
 
-    @Inject
+    private final City city = City.MOSCOW;
+
     public DataPicker(Provider<EntityManager> em) {
         this.em = em;
     }
 
-    public void pickData() {
+    public void pickData(Date expireDate) {
         em.get().getTransaction().begin();
 
         try {
             setupSession();
-            clearDataBase();
             pickData("http://bus.ruz.net/routes/", VehicleType.BUS);
             pickData("http://trolley.ruz.net/routes/", VehicleType.TROLLEYBUS);
         } catch (RuntimeException e) {
@@ -146,7 +135,7 @@ class DataPicker implements IDataPicker {
     @NotNull
     private Map<Route, String> pickRoutes(@NotNull String initialUrl, @NotNull VehicleType vehicleType) throws IOException {
         log.info("Exploring page {}...", initialUrl);
-        final String content = Browser.getContent(initialUrl);
+        final String content = Browser.getContent(initialUrl, Charset.forName("CP1251"));
         final String root = getRoot(initialUrl);
 
         final Elements elements = HtmlParser.getElements(content, "a");
@@ -161,7 +150,7 @@ class DataPicker implements IDataPicker {
 
                 final String absoluteLink = root + relativeLink;
 
-                final Route route = new Route(vehicleType, routeNum);
+                final Route route = new Route(vehicleType, routeNum, city, "");
                 if (!routeMap.containsKey(route)) {
                     routeMap.put(route, absoluteLink);
                 }
@@ -172,7 +161,7 @@ class DataPicker implements IDataPicker {
 
     private void pickRoute(@NotNull Route route, @NotNull String url) throws IOException, InvalidRouteException {
         //log.info("Picking route {}...", route);
-        final String s = Browser.getContent(url);
+        final String s = Browser.getContent(url, Charset.forName("CP1251"));
 
         // Конечные
         {
@@ -291,12 +280,12 @@ class DataPicker implements IDataPicker {
                         }
                         final Stop stop = stopMap.get(stopUrl);
                         if (stopIsEnabledAB && order == 1) {
-                            final RouteStop rs = RouteStop.create(route, stop, Direction.AB);
+                            final RouteStop rs = RouteStop.create(route, stop, Direction.AB, abStops.size());
                             abStops.add(rs);
                             lastStops.add(rs);
                         }
                         if (stopIsEnabledBA && order == 2) {
-                            final RouteStop rs = RouteStop.create(route, stop, Direction.BA);
+                            final RouteStop rs = RouteStop.create(route, stop, Direction.BA, null);
                             baStops.add(rs);
                             lastStops.add(rs);
                         }
@@ -305,9 +294,6 @@ class DataPicker implements IDataPicker {
 
             }
 
-            for (int i = 0; i < abStops.size(); i++) {
-                abStops.get(i).setOrder(i);
-            }
             Collections.reverse(baStops);
             for (int i = 0; i < baStops.size(); i++) {
                 baStops.get(i).setOrder(i);
@@ -326,7 +312,7 @@ class DataPicker implements IDataPicker {
     }
 
     private Stop pickStop(@NotNull String url) throws IOException, InvalidRouteException {
-        final String content = Browser.getContent(url);
+        final String content = Browser.getContent(url, Charset.forName("CP1251"));
 
         // Название
         String name = "";
@@ -357,7 +343,7 @@ class DataPicker implements IDataPicker {
             throw new InvalidRouteException();
         }
 
-        final Stop stop = new Stop(Typographer.process(name), coordinates);
+        final Stop stop = new Stop(Typographer.process(name), coordinates, city, Calendar.getInstance().getTime(), "no");
         em.get().persist(stop);
         return stop;
     }
@@ -387,7 +373,7 @@ class DataPicker implements IDataPicker {
 
                 if (key.equals("ll")) {
                     final List<String> list2 = Lists.newArrayList(Splitter.on("%2C").split(value));
-                    final Coordinates coordinates = new Coordinates(new BigDecimal(list2.get(1)), new BigDecimal(list2.get(0)));
+                    final Coordinates coordinates = new Coordinates(Double.valueOf(list2.get(1)), Double.valueOf(list2.get(0)));
                     em.get().persist(new UrlCoordinates(url, coordinates));
                     return coordinates;
                 }

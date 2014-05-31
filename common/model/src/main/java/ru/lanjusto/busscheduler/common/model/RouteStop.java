@@ -48,8 +48,8 @@ public class RouteStop {
     //TODO время работы в скобках
 
 
-    public static RouteStop create(@NotNull Route route, @NotNull Stop stop, @NotNull Direction direction) {
-        final RouteStop routeStop = new RouteStop(route, stop, direction);
+    public static RouteStop create(@NotNull Route route, @NotNull Stop stop, @NotNull Direction direction, Integer order) {
+        final RouteStop routeStop = new RouteStop(route, stop, direction, order);
         route.getRouteStops().add(routeStop);
         return routeStop;
     }
@@ -58,7 +58,7 @@ public class RouteStop {
 
     }
 
-    private RouteStop(@NotNull Route route, @NotNull Stop stop, @NotNull Direction direction) {
+    private RouteStop(@NotNull Route route, @NotNull Stop stop, @NotNull Direction direction, int order) {
         this.route = route;
         this.stop = stop;
         this.direction = direction;
