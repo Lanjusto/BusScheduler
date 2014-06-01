@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.lanjusto.busscheduler.common.model.*;
 import ru.lanjusto.busscheduler.server.dbupdater.browser.Browser;
+import ru.lanjusto.busscheduler.server.dbupdater.service.CoordinateConverter;
 import ru.lanjusto.busscheduler.server.dbupdater.service.RouteMergeService;
 
 import javax.persistence.EntityManager;
@@ -150,8 +151,7 @@ public class SPBPicker implements IDataPicker {
             String name = ((String) jsonStopProp.get("name")).replaceAll("[ ]+", " ").trim();
             String id = ((Long) jsonStopProp.get("id")).toString();
             JSONArray coord = (JSONArray) ((JSONObject) jsonStop.get("geometry")).get("coordinates");
-            Coordinates coordinates = new Coordinates((Double) coord.get(0), (Double) coord.get(1));
-
+            Coordinates coordinates = CoordinateConverter.fromEPSG3857((Double) coord.get(0), (Double) coord.get(1));
             Stop stop = routeMergeService.mergeStop(name, city, source, coordinates, id);
             map.put(name, stop);
         }
