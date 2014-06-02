@@ -24,6 +24,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.Date;
 
 /**
  * Created by Анечка on 27.05.2014.
@@ -128,11 +129,32 @@ public class SPBPicker implements IDataPicker {
                 //15161 ОБОРОТНАЯ СТАНЦИЯ СТАНЦИЯ МЕТРО&quot;ЛОМОНОСОВСКАЯ&quot;
                 //json "id":25070,"name":"оборотная станция метро Ломоносовская"
                 log.warn("Источник не определил координаты остановки "+stopName+", включается ручное определение координат");
-                throw new RuntimeException("Не определены координаты для остановки " + stopName);
-                //stopes.put("stopName", new Coordinates())
+                switch (stopName) {
+                    case "ОБОРОТНАЯ СТАНЦИЯ СТАНЦИЯ МЕТРО\"ЛОМОНОСОВСКАЯ\"": stopName = "оборотная станция метро Ломоносовская"; break;
+                    case "Б. САМПСОНИЕВСКИЙ ПР. (ПОСАДКА)":
+                        manualAddStop(stopes, stopName, 59.984293, 30.33669);
+                        break;
+                    case "КОНЕЧНАЯ СТАНЦИЯ «СУЗДАЛЬСКИЙ ПР.»":
+                        manualAddStop(stopes, stopName, 60.046439, 30.406476);
+                        break;
+                    case "ОБОРОТНАЯ СТАНЦИЯ \"СТАНЦИЯ МЕТРО \"ВЫБОРГСКАЯ\"":
+                        manualAddStop(stopes, stopName, 59.971307, 30.348186);
+                        break;
+                    case "КАНОНЕРСКИЙ ОСТРОВ":
+                        manualAddStop(stopes, stopName, 59.904846, 30.21673);
+                        break;
+                    default: throw new RuntimeException("Не определены координаты для остановки " + stopName);
+                }
+
             }
             routeStops.add(RouteStop.create(route, stopes.get(stopName), direction, i++));
         }
+    }
+
+    private void manualAddStop(Map<String, Stop> stopes, String stopName, double latitude, double longitude) {
+        Stop stop = new Stop(stopName, new Coordinates(latitude, longitude), City.PETERBURG, new Date(), source);
+        em.get().persist(stop);
+        stopes.put(stopName, stop);
     }
 
     private Map<String, Stop> getStopes(Long routeId, Route route) throws IOException, ParseException {
@@ -235,7 +257,9 @@ public class SPBPicker implements IDataPicker {
      * @throws IOException
      */
     private boolean importSchedule(RouteStop routeStop, Long routeId) throws IOException {
-        final String answer = Browser.getContent("http://transport.orgp.spb.ru/Portal/transport/route/"+ routeId +"/schedule/"+ routeStop.getStop().getSourceId() +"/direct", Charset.forName("UTF-8"));
+        String dir = routeStop.getDirection().equals(Direction.AB) ? "/direct" : "/return";
+        log.info("http://transport.orgp.spb.ru/Portal/transport/route/"+ routeId +"/schedule/"+ routeStop.getStop().getSourceId() + dir);
+        final String answer = Browser.getContent("http://transport.orgp.spb.ru/Portal/transport/route/"+ routeId +"/schedule/"+ routeStop.getStop().getSourceId() + dir, Charset.forName("UTF-8"));
 
         Document document = Jsoup.parseBodyFragment(answer);
         Element scheduleTable = document.getElementById("scheduleTable");
@@ -245,16 +269,59 @@ public class SPBPicker implements IDataPicker {
         }
         Elements rows =  scheduleTable.getElementsByTag("tr");
 
-        if (rows.get(0).getElementsByTag("span").get(0).ownText().equals("Период дня"))
+        if (rows.get(0).getElementsByTag("th").get(0).text().contains("Период дня"))
         {
             Map<DayOfWeek, String[]> dayStartStop = importDayStartStop(document);
             importRouteSchedule(routeStop, rows, dayStartStop);
             return false;
         }
-        else {
+        else if (rows.get(0).getElementsByTag("th").get(0).ownText().contains("Час")) {
+            importStopSchedule(routeStop, rows);
+            return true;
+        } else {
             throw new RuntimeException("unknown schedule type "+ rows.get(0).getElementsByTag("span").get(0).ownText());
         }
 
+
+    }
+
+    private void importStopSchedule(RouteStop routeStop, Elements rows) {
+
+        int rowInd = 0;
+        List<RouteStopSchedule> schedules = new ArrayList<>();
+        for(Element row: rows) {
+            if (rowInd == 0) {
+                boolean skip = true;
+                for (Element th : row.getElementsByTag("th")) {
+                    if (skip) {
+                        skip = false;
+                    } else {
+                        RouteStopSchedule e = new RouteStopSchedule(routeStop, parseDay(th.ownText()));
+                        em.get().persist(e);
+                        schedules.add(e);
+                    }
+                }
+            } else {
+                int sched = -1;
+                for (Element td : row.getElementsByTag("td")) {
+                    long hour = 0;
+                    if (sched == -1) {
+                        hour = Long.valueOf(td.text().substring(0,2).trim());
+                    } else {
+                        String[] minutes = td.ownText().split(",");
+                        for (String minute : minutes) {
+                            if (!minute.trim().equals("")) {
+                                //todo 00:30 относится к СЛЕДУЮЩЕМУ дню, видимо так как это заканчивается смена предшествующего дня
+                                Date time = new Date((hour * 60 + Long.valueOf(minute.trim())) * 60_000);
+                                schedules.get(sched).getTimes().add(new ScheduleTime(time));
+                            }
+                        }
+                    }
+                    sched++;
+                }
+            }
+            rowInd++;
+        }
 
     }
 

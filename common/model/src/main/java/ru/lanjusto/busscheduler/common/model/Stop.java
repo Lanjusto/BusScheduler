@@ -53,7 +53,7 @@ public class Stop {
      * идентификатор в системе источнике, иногда полезно
      */
     @Column(name = "source_id")
-    @Basic(optional = false)
+    @Basic
     private String sourceId;
 
     protected Stop() {
