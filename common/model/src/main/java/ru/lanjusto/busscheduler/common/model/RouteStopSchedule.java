@@ -31,13 +31,14 @@ public class RouteStopSchedule {
     /**
      * массив времени отправления в виде чч:мм
      */
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_schedule")
     private List<ScheduleTime> times = new ArrayList<ScheduleTime>();
 
     protected RouteStopSchedule() {
     }
 
-    public RouteStopSchedule(RouteStop routeStop, DayOfWeek day, List<String> times) {
+    public RouteStopSchedule(RouteStop routeStop, DayOfWeek day) {
         this.routeStop = routeStop;
         this.day = day;
     }
@@ -66,4 +67,11 @@ public class RouteStopSchedule {
         this.day = day;
     }
 
+    public List<ScheduleTime> getTimes() {
+        return times;
+    }
+
+    public void setTimes(List<ScheduleTime> times) {
+        this.times = times;
+    }
 }

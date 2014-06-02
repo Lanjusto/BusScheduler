@@ -1,8 +1,7 @@
 package ru.lanjusto.busscheduler.common.model;
 
-import ru.lanjusto.busscheduler.common.utils.Assert;
-
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Строка расписания остановки
@@ -16,22 +15,19 @@ public class ScheduleTime {
     @Column(name = "id_schedule_time")
     private long id;
 
+    /*
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id_route_stop", nullable = false)
+    @JoinColumn(name = "id_route_stop_schedule", nullable = false)
     private RouteStopSchedule schedule;
-
-    //TODO возможно оптимальнее хранить в виде смещения в миллисекундах от начала дня
+*/
     @Column(name = "time", nullable = false)
-    @Basic(optional = false)
-    private String time;
+    @Temporal(TemporalType.TIME)
+    private Date time;
 
-    public ScheduleTime() {
+    protected ScheduleTime() {
     }
 
-    public ScheduleTime(RouteStopSchedule schedule, String time) {
-        Assert.isTrue(time.matches("/d/d:/d/d"));
-
-        this.schedule = schedule;
+    public ScheduleTime(Date time) {
         this.time = time;
     }
 
@@ -39,23 +35,11 @@ public class ScheduleTime {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public RouteStopSchedule getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(RouteStopSchedule schedule) {
-        this.schedule = schedule;
-    }
-
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 }
