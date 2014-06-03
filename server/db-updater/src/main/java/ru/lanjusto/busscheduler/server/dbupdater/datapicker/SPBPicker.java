@@ -53,7 +53,7 @@ public class SPBPicker implements IDataPicker {
      */
     public void pickData(Date expireDate) throws IOException, ParseException {
         em.get().getTransaction().begin();
-        Map<Long, Route> routes = getRoutes(expireDate);
+        Map<Long, Route> routes = getRoutes();
 
         for (Long routeId : routes.keySet()) {
             Route route = routes.get(routeId);
@@ -78,7 +78,7 @@ public class SPBPicker implements IDataPicker {
         routeMergeService.clearRoute(route);
 
         // достаем остановки (название - координаты)
-        Map<String, Stop> stopes = getStopes(routeId, route);
+        Map<String, Stop> stopes = getStopes(routeId);
 
         // достаем маршрут по остановкам
         List<RouteStop> routeStops = importRouteStops(routeId, route, stopes);
@@ -117,33 +117,50 @@ public class SPBPicker implements IDataPicker {
         for (Element element : elements) {
             String stopName;
             final Elements aElements = element.getElementsByTag("a");
+            String url = null;
             if (aElements.size() == 0) {
                 //это выделенная по умолчанию остановка...
                 stopName = element.ownText();
             } else {
                 stopName = aElements.get(0).ownText();
+                url = aElements.get(0).attr("href");
             }
             stopName = stopName.replaceAll("  ", " ");
 
             if (stopes.get(stopName) == null) {
-                //15161 ОБОРОТНАЯ СТАНЦИЯ СТАНЦИЯ МЕТРО&quot;ЛОМОНОСОВСКАЯ&quot;
-                //json "id":25070,"name":"оборотная станция метро Ломоносовская"
+                String id = url.substring(url.lastIndexOf("/", 2), url.lastIndexOf("/"));
+                //id можно теоретически взять из href
                 log.warn("Источник не определил координаты остановки "+stopName+", включается ручное определение координат");
                 switch (stopName) {
                     case "ОБОРОТНАЯ СТАНЦИЯ СТАНЦИЯ МЕТРО\"ЛОМОНОСОВСКАЯ\"": stopName = "оборотная станция метро Ломоносовская"; break;
                     case "Б. САМПСОНИЕВСКИЙ ПР. (ПОСАДКА)":
-                        manualAddStop(stopes, stopName, 59.984293, 30.33669);
+                        manualAddStop(stopes, stopName, 59.984293, 30.33669, id);
                         break;
                     case "КОНЕЧНАЯ СТАНЦИЯ «СУЗДАЛЬСКИЙ ПР.»":
-                        manualAddStop(stopes, stopName, 60.046439, 30.406476);
+                        manualAddStop(stopes, stopName, 60.046439, 30.406476, id);
                         break;
                     case "ОБОРОТНАЯ СТАНЦИЯ \"СТАНЦИЯ МЕТРО \"ВЫБОРГСКАЯ\"":
-                        manualAddStop(stopes, stopName, 59.971307, 30.348186);
+                        manualAddStop(stopes, stopName, 59.971307, 30.348186, id);
                         break;
                     case "КАНОНЕРСКИЙ ОСТРОВ":
-                        manualAddStop(stopes, stopName, 59.904846, 30.21673);
+                        manualAddStop(stopes, stopName, 59.904846, 30.21673, id);
                         break;
-                    default: throw new RuntimeException("Не определены координаты для остановки " + stopName);
+                    case "ЗАЯЧИЙ РЕМИЗ":
+                        Stop stop = stopes.get("ЗАЙЧИЙ РЕМИЗ");
+                        stop.setName("ЗАЯЧИЙ РЕМИЗ");
+                        stopName = "ЗАЙЧИЙ РЕМИЗ";
+                        break;
+                    case "Б. СМОЛЕНСКИЙ ПР.,УГ. УЛ. БАБУШКИНА":
+                        manualAddStop(stopes, "БОЛЬШОЙ СМОЛЕНСКИЙ ПР.", 59.898721, 30.419236, id);
+                        stopName = "БОЛЬШОЙ СМОЛЕНСКИЙ ПР.";
+                        break;
+                    case "ПЛ. РАСТРЕЛЛИ (ПОСАДКА)":
+                        manualAddStop(stopes, stopName, 59.948679, 30.389262, id);
+                        break;
+                    case "РОЩИНСКАЯ УЛ.":
+                        manualAddStop(stopes, stopName, 59.883742, 30.319455, id);
+                        break;
+                    default: manualAddStop(stopes, stopName, 0, 0, id);//throw new RuntimeException("Не определены координаты для остановки " + stopName);
                 }
 
             }
@@ -151,13 +168,13 @@ public class SPBPicker implements IDataPicker {
         }
     }
 
-    private void manualAddStop(Map<String, Stop> stopes, String stopName, double latitude, double longitude) {
-        Stop stop = new Stop(stopName, new Coordinates(latitude, longitude), City.PETERBURG, new Date(), source);
+    private void manualAddStop(Map<String, Stop> stopes, String stopName, double latitude, double longitude, String id) {
+        Stop stop = new Stop(stopName, new Coordinates(latitude, longitude), City.PETERBURG, new Date(), source, id);
         em.get().persist(stop);
         stopes.put(stopName, stop);
     }
 
-    private Map<String, Stop> getStopes(Long routeId, Route route) throws IOException, ParseException {
+    private Map<String, Stop> getStopes(Long routeId) throws IOException, ParseException {
         Map<String, Stop> map = new HashMap<>();
 
         String answer = Browser.getContent("http://transport.orgp.spb.ru/Portal/transport/map/poi?ROUTE="+ routeId +"&REQUEST=GetFeature&_=1401302330057", Charset.forName("UTF-8"));
@@ -181,8 +198,8 @@ public class SPBPicker implements IDataPicker {
         return map;
     }
 
-    private Map<Long, Route> getRoutes(Date expireDate) throws IOException, ParseException {
-        Map<Long, Route> map = new HashMap<Long, Route>();
+    private Map<Long, Route> getRoutes() throws IOException, ParseException {
+        Map<Long, Route> map = new HashMap<>();
 
         Long totalRoutes = 1L; //не важно, переопределится при первом запросе
         Long displayStart = 0L;
@@ -258,7 +275,6 @@ public class SPBPicker implements IDataPicker {
      */
     private boolean importSchedule(RouteStop routeStop, Long routeId) throws IOException {
         String dir = routeStop.getDirection().equals(Direction.AB) ? "/direct" : "/return";
-        log.info("http://transport.orgp.spb.ru/Portal/transport/route/"+ routeId +"/schedule/"+ routeStop.getStop().getSourceId() + dir);
         final String answer = Browser.getContent("http://transport.orgp.spb.ru/Portal/transport/route/"+ routeId +"/schedule/"+ routeStop.getStop().getSourceId() + dir, Charset.forName("UTF-8"));
 
         Document document = Jsoup.parseBodyFragment(answer);
@@ -376,6 +392,8 @@ public class SPBPicker implements IDataPicker {
                 return DayOfWeek.MON_FRI;
             case "Выходные дни":
                 return DayOfWeek.SAT_SUN;
+            case "Будние и субботние дни":
+                return DayOfWeek.MON_SAT;
             default:
                 throw new RuntimeException("unknown day " + s);
         }
