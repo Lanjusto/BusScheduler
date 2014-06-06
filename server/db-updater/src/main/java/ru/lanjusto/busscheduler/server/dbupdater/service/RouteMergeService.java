@@ -1,6 +1,8 @@
 package ru.lanjusto.busscheduler.server.dbupdater.service;
 
 import com.google.inject.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.lanjusto.busscheduler.common.model.*;
 
 import javax.persistence.EntityManager;
@@ -11,6 +13,7 @@ import java.util.List;
  * Created by Анечка on 28.05.2014.
  */
 public class RouteMergeService {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private final Provider<EntityManager> em;
 
     public RouteMergeService(Provider<EntityManager> em) {
@@ -51,12 +54,40 @@ public class RouteMergeService {
         return route;
     }
 
-    public Stop mergeStop(String name, City city, String source, Coordinates coordinates) {
-        return mergeStop(name, city, source, coordinates, null);
+    public Stop mergeStopById(String name, City city, String source, Coordinates coordinates, String sourceId) {
+        Stop stop;
+        List<Stop> stops = em.get()
+                .createQuery("select s from Stop s where s.city=:city and s.source=:source and s.sourceId=:sourceId", Stop.class)
+                .setParameter("city", city)
+                .setParameter("source", source)
+                .setParameter("sourceId", sourceId)
+                .getResultList();
+        if (stops.size() == 1) {
+            stop = stops.get(0);
+            if (!stop.getName().equals(name)) {
+                stop.setName(name);
+            }
+            if (stop.getCoordinates() != null && !stop.getCoordinates().equals(coordinates)) {
+                stop.setCoordinates(coordinates);
+            }
+            return stop;
+        } else if (stops.size() > 1) {
+            throw new RuntimeException("обнаружено 2 остановки из одного источника с одним id");
+        } else {
+            stop = new Stop(name, coordinates, city, new Date(), source, sourceId);
+            em.get().persist(stop);
+        }
+
+        stop.setUpdateTime(new Date());
+        return stop;
     }
 
+    public Stop mergeStop(String name, City city, String source, Coordinates coordinates) {
+        // в том же источнике по имени
+        // потом вообще везде по сусекам
 
-    public Stop mergeStop(String name, City city, String source, Coordinates coordinates, String sourceId) {
+        log.debug("Рекомендуется искать остановки по внутреннему идентификатору источника через mergeStopById.");
+
         List<Stop> stops = em.get()
                 .createQuery("select s from Stop s where s.name=:name and s.city=:city and s.source=:source")
                 .setParameter("name", name)
@@ -65,7 +96,7 @@ public class RouteMergeService {
                 .getResultList();
 
         if (stops.size() > 1) {
-            //ищем  с теми же координатами
+            //ищем  с теми же координатами (если они есть...)
             for (Stop stop : stops) {
                 if ((stop.getCoordinates() == null && coordinates == null)
                         || stop.getCoordinates().equals(coordinates)) {
@@ -73,17 +104,16 @@ public class RouteMergeService {
                     return stop;
                 }
             }
-
-            // не нашли, создадим новую
-            // если было две с одним именем и одна переместилась в пространстве, то старая остановка "зависнет"
-            Stop stop = new Stop(name, coordinates, city, new Date(), source, sourceId);
-            em.get().persist(stop);
-            return stop;
         }
-        if (stops.size() == 1) {
-            stops.get(0).setUpdateTime(new Date());
-            stops.get(0).setSourceId(sourceId);
-            return stops.get(0);
+
+        if (stops.size() > 0) {
+            Stop stop = stops.get(0);
+            if (stop.getCoordinates() != null && !stop.getCoordinates().equals(coordinates)) {
+                stop.setSource(source);
+                stop.setCoordinates(coordinates);
+            }
+            stop.setUpdateTime(new Date());
+            return stop;
         }
 
         // поищем в других источниках...
@@ -93,39 +123,48 @@ public class RouteMergeService {
                 .setParameter("city", city)
                 .getResultList();
 
-        if (stops.size() == 1) {
+        if (stops.size() > 0) {
             if (coordinates != null && stops.get(0).getCoordinates() == null) {
                 stops.get(0).setCoordinates(coordinates);
                 stops.get(0).setSource(source);
             }
-            stops.get(0).setSourceId(sourceId);
             stops.get(0).setUpdateTime(new Date());
 
             return stops.get(0);
         }
 
         // не нашли, создадим новую
-        Stop stop = new Stop(name, coordinates, city, new Date(), source, sourceId);
+        Stop stop = new Stop(name, coordinates, city, new Date(), source);
         em.get().persist(stop);
         return stop;
     }
 
     public void clearRoute(Route route) {
+        // удаляем расписания остановки
+        em.get().createQuery("delete from RouteStopSchedule rs where rs.routeStop.route = :route")
+                .setParameter("route", route)
+                .executeUpdate();
+
         // удаляем текущие остановки
-        List<RouteStop> routeStops = em.get().createQuery("select rs from RouteStop rs where rs.route.id = :id", RouteStop.class)
+        em.get().createQuery("delete from RouteStop rs where rs.route.id = :id")
                 .setParameter("id", route.getId())
-                .getResultList();
-        for (RouteStop routeStop : routeStops) {
-            em.get().remove(routeStop);
-        }
+                .executeUpdate();
 
         // удаляем расписания
-        List<RouteSchedule> routeSchedules = em.get().createQuery("select rs from RouteSchedule rs where rs.route = :route", RouteSchedule.class)
+        em.get().createQuery("delete from RouteSchedule rs where rs.route = :route")
                 .setParameter("route", route)
-                .getResultList();
-        for (RouteSchedule routeSchedule : routeSchedules) {
-            em.get().remove(routeSchedule);
-        }
+                .executeUpdate();
+    }
 
+    public Stop findStop(City city, String source, String sourceId) {
+        try {
+            return em.get().createQuery("select s from Stop s where s.city=:city and source=:source and sourceId=:sourceId", Stop.class)
+                    .setParameter("city", city)
+                    .setParameter("source", source)
+                    .setParameter("sourceId", sourceId)
+                    .getSingleResult();
+        } catch (Exception e) {
+            throw new RuntimeException("Не найдена остановка id "+sourceId);
+        }
     }
 }

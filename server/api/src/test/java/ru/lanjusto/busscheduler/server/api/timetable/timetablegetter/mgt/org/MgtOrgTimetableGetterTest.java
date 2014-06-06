@@ -2,17 +2,13 @@ package ru.lanjusto.busscheduler.server.api.timetable.timetablegetter.mgt.org;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import ru.lanjusto.busscheduler.common.model.Direction;
-import ru.lanjusto.busscheduler.common.model.Route;
-import ru.lanjusto.busscheduler.common.model.RouteStop;
-import ru.lanjusto.busscheduler.common.model.Stop;
-import ru.lanjusto.busscheduler.common.model.Timetable;
-import ru.lanjusto.busscheduler.common.model.VehicleType;
+import ru.lanjusto.busscheduler.common.model.*;
 import ru.lanjusto.busscheduler.server.api.timetable.Day;
 import ru.lanjusto.busscheduler.server.api.timetable.ITimetableGetter;
 import ru.lanjusto.busscheduler.server.api.timetable.NoTimetableAvailableException;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,10 +48,10 @@ public class MgtOrgTimetableGetterTest {
 
     private void simpleTest(String routeStopName, Day day, List<String> otherRouteStops) throws NoTimetableAvailableException {
         final ITimetableGetter timetableGetter = new MgtOrgTimetableGetter();
-        final Route route = new Route(VehicleType.TROLLEYBUS, "78");
-        final Stop stop = new Stop(routeStopName, null);
+        final Route route = new Route(VehicleType.TROLLEYBUS, "78", City.MOSCOW, "");
+        final Stop stop = new Stop(routeStopName, null, City.MOSCOW, new Date(), "");
 
-        final RouteStop routeStop = RouteStop.create(route, stop, Direction.AB);
+        final RouteStop routeStop = RouteStop.create(route, stop, Direction.AB, 0);
         final Timetable timetable = timetableGetter.get(routeStop, day);
 
         System.out.println(timetable);

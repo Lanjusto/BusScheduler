@@ -19,19 +19,7 @@ public class Browser {
     public static String getContent(@NotNull String url, Charset charset) throws IOException {
         final URL urlUrl = new URL(url);
         final HttpURLConnection urlConnection = (HttpURLConnection) urlUrl.openConnection();
-        Assert.equals(urlConnection.getResponseCode(), HttpURLConnection.HTTP_OK);
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), charset));
-
-        try {
-            final StringBuilder sb = new StringBuilder();
-            String inputLine;
-            while ((inputLine = reader.readLine()) != null) {
-                sb.append(inputLine);
-            }
-            return sb.toString();
-        } finally {
-            reader.close();
-        }
+        return readAnswer(urlConnection, charset);
     }
 
     public static URL getUrlAfterRedirecting(@NotNull String url) throws IOException {
@@ -51,12 +39,11 @@ public class Browser {
         return urlConnection.getURL();
     }
 
-
-    public static String getAnswer(HttpURLConnection urlConnection) throws IOException {
-        //Assert.equals(urlConnection.getResponseCode(), HttpURLConnection.HTTP_OK);
+    public static String readAnswer(HttpURLConnection urlConnection, Charset charset) throws IOException {
+        Assert.equals(urlConnection.getResponseCode(), HttpURLConnection.HTTP_OK);
 
         final StringBuilder sb = new StringBuilder();
-        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), charset))) {
             String inputLine;
             while ((inputLine = reader.readLine()) != null) {
                 sb.append(inputLine);
@@ -65,5 +52,7 @@ public class Browser {
 
         return sb.toString();
     }
+
+
 
 }

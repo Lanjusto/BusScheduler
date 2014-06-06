@@ -22,6 +22,7 @@ public class Stop {
 
     @Column(name = "name", nullable = false)
     @Basic(optional = false)
+    //TODO индекс
     private String name;
 
     @Basic(optional = false)
@@ -54,6 +55,7 @@ public class Stop {
      */
     @Column(name = "source_id")
     @Basic
+    //TODO индекс
     private String sourceId;
 
     protected Stop() {
@@ -83,6 +85,10 @@ public class Stop {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setCoordinates(Coordinates coordinates) {
