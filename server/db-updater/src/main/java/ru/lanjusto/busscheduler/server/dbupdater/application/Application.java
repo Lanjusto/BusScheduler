@@ -31,7 +31,7 @@ public class Application {
         persistenceService.start();
 
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.WEEK_OF_MONTH, -1);
+      //  cal.add(Calendar.WEEK_OF_MONTH, -1);
         Date expireDate = cal.getTime();
 
         //new DataPicker(em).pickData(expireDate);

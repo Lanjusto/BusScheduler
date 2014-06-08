@@ -19,7 +19,7 @@ public class RouteStopSchedule {
     @Column(name = "id_route_stop_schedule")
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_route_stop", nullable = false)
     private RouteStop routeStop;
 

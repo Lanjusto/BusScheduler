@@ -48,7 +48,28 @@ public class RouteMergeService {
             return routes.get(0);
         }
 
-        Route route = new Route(type, num, description, city, source);
+        Route route = new Route(type, num, description, city, source, null);
+        em.get().persist(route);
+
+        return route;
+    }
+
+    public Route getRouteById(City city, String source, String sourceId, VehicleType type, String num, String description) {
+        List<Route> routes = em.get().createQuery("select r from Route r where r.city=:city and r.source=:source and r.sourceId=:sourceId")
+                .setParameter("city", city)
+                .setParameter("source", source)
+                .setParameter("sourceId", sourceId)
+                .getResultList();
+
+        if (routes.size() > 1) {
+            throw new RuntimeException("Найдено более одного маршрута");
+        }
+
+        if (routes.size() == 1) {
+            return routes.get(0);
+        }
+
+        Route route = new Route(type, num, description, city, source, sourceId);
         em.get().persist(route);
 
         return route;
@@ -140,15 +161,18 @@ public class RouteMergeService {
     }
 
     public void clearRoute(Route route) {
-        // удаляем расписания остановки
-        em.get().createQuery("delete from RouteStopSchedule rs where rs.routeStop.route = :route")
-                .setParameter("route", route)
-                .executeUpdate();
-
-        // удаляем текущие остановки
-        em.get().createQuery("delete from RouteStop rs where rs.route.id = :id")
+        // удаляем остановки
+        List<RouteStop> routeStops = em.get().createQuery("select rs from RouteStop rs where rs.route.id = :id", RouteStop.class)
                 .setParameter("id", route.getId())
-                .executeUpdate();
+                .getResultList();
+        for (RouteStop routeStop : routeStops) {
+            // удаляем расписания остановки
+            em.get().createQuery("delete from RouteStopSchedule rs where rs.routeStop = :rs")
+                    .setParameter("rs", routeStop)
+                    .executeUpdate();
+
+            em.get().remove(routeStop);
+        }
 
         // удаляем расписания
         em.get().createQuery("delete from RouteSchedule rs where rs.route = :route")

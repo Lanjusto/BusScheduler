@@ -52,6 +52,10 @@ public class Route {
     @Basic(optional = false)
     private String source;
 
+    @Column(name = "source_id", nullable = true)
+    @Basic(optional = true)
+    private String sourceId;
+
 
     protected Route() {
 
@@ -65,13 +69,14 @@ public class Route {
         this.updateTime = updateTime;
     }
 
-    public Route(@NotNull VehicleType vehicleType, @NotNull String num, @NotNull String description, @NotNull City city, @NotNull String source) {
+    public Route(@NotNull VehicleType vehicleType, @NotNull String num, @NotNull String description, @NotNull City city, @NotNull String source, String sourceId) {
         this.vehicleType = vehicleType;
         this.num = num;
         this.city = city;
         this.updateTime = updateTime;
         this.source = source;
         this.description = description;
+        this.sourceId = sourceId;
     }
 
     public long getId() {
@@ -135,6 +140,14 @@ public class Route {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
     @Override

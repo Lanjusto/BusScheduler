@@ -58,23 +58,21 @@ public class SPBPicker implements IDataPicker {
         Date updated = em.get().createQuery("select min(updateTime) from Stop s where s.source=:source", Date.class)
                 .setParameter("source", source)
                 .getSingleResult();
-        if (updated.compareTo(expireDate) < 0 ) {
+        if (updated == null || updated.compareTo(expireDate) < 0 ) {
             getStops();
         }
 
         log.info("Загружаем маршруты");
-        Map<Long, Route> routes = getRoutes();
+        List<Route> routes = getRoutes();
         em.get().getTransaction().commit();
         em.get().clear();
         em.get().getTransaction().begin();
 
-        for (Long routeId : routes.keySet()) {
-            Route route = routes.get(routeId);
-
+        for (Route route : routes) {
             if (route.getUpdateTime() == null || expireDate.compareTo(route.getUpdateTime()) > 0) {
                 log.info(route.toString());
                 route = em.get().merge(route);
-                importRoute(routeId, route);
+                importRoute(route);
 
                 route.setUpdateTime(new Date());
 
@@ -88,28 +86,42 @@ public class SPBPicker implements IDataPicker {
         em.get().getTransaction().commit();
 
         // удаляем остановки без связанных маршрутов
+        List<Stop> unusedStops = em.get().createQuery("select s from Stop s where not exists (select 1 from RouteStop rs where rs.stop=s)")
+                .getResultList();
+        for (Stop unusedStop : unusedStops) {
+            log.info("Удаляется неиспользуемая остановка "+unusedStop);
+            em.get().remove(unusedStop);
+        }
+
         // удаляем так и не обновившиеся маршруты (если дошли то их не было в списке маршрутов на сайте)
+        List<Route> unupdatedRoutes = em.get().createQuery("select r from Route r where r.dtmUpdate<:dtm")
+                .setParameter("dtm", expireDate)
+                .getResultList();
+        for (Route route : unupdatedRoutes) {
+            log.info("Не обновился маршрут "+route+" возможно он отменен!!! Необходима проверка, если это так необходимо его удалить.");
+            //автоматом удалять маршруты пока не будем, вдруг бывает, что на сайте показывается только часть (глюк)
+        }
     }
 
-    private void importRoute(Long routeId, Route route) throws IOException, ParseException {
+    private void importRoute(Route route) throws IOException, ParseException {
         routeMergeService.clearRoute(route);
 
         // достаем маршрут по остановкам
-        List<RouteStop> routeStops = importRouteStops(routeId, route);
+        List<RouteStop> routeStops = importRouteStops(route);
 
         // достаем расписание по остановкам
         for (RouteStop routeStop : routeStops) {
-            boolean cont = importSchedule(routeStop, routeId);
+            boolean cont = importSchedule(routeStop);
             if (!cont) {
                 break;
             }
         }
     }
 
-    private List<RouteStop> importRouteStops(Long routeId, Route route) throws IOException {
+    private List<RouteStop> importRouteStops(Route route) throws IOException {
         List<RouteStop> routeStops = new ArrayList<>();
 
-        final String answer = Browser.getContent("http://transport.orgp.spb.ru/Portal/transport/route/" + routeId + "/schedule", Charset.forName("UTF8"));
+        final String answer = Browser.getContent("http://transport.orgp.spb.ru/Portal/transport/route/" + route.getSourceId() + "/schedule", Charset.forName("UTF8"));
         //return "<a href='" + Context.link + "/route/" + id + "/schedule/23528'>"
         String secretPrefix = "return \"<a href='\" + Context.link + \"/route/\" + id + \"/schedule/";
         Integer ind = answer.indexOf(secretPrefix);
@@ -197,8 +209,8 @@ public class SPBPicker implements IDataPicker {
         return map;
     }
 
-    private Map<Long, Route> getRoutes() throws IOException, ParseException {
-        Map<Long, Route> map = new HashMap<>();
+    private List<Route> getRoutes() throws IOException, ParseException {
+        List<Route> routes = new ArrayList<>();
 
         Long totalRoutes = 1L; //не важно, переопределится при первом запросе
         Long displayStart = 0L;
@@ -252,14 +264,13 @@ public class SPBPicker implements IDataPicker {
                     BigDecimal price = new BigDecimal((Double) jsonRoute.get(7)); //todo определиться нужна ли цена
                 }
 
-                Route route = routeMergeService.getRoute(City.PETERBURG, num, vehicleType, source, desc, false);
-                map.put(id, route);
+                routes.add(routeMergeService.getRouteById(city, source, id.toString(), vehicleType, num, desc));
             }
 
             displayStart += window;
         }
 
-        return map;
+        return routes;
     }
 
 
@@ -316,13 +327,12 @@ public class SPBPicker implements IDataPicker {
      *
      * это не нужно если расписание интервальное
      * @param routeStop
-     * @param routeId
      * @return
      * @throws IOException
      */
-    private boolean importSchedule(RouteStop routeStop, Long routeId) throws IOException {
+    private boolean importSchedule(RouteStop routeStop) throws IOException {
         String dir = routeStop.getDirection().equals(Direction.AB) ? "/direct" : "/return";
-        final String answer = Browser.getContent("http://transport.orgp.spb.ru/Portal/transport/route/"+ routeId +"/schedule/"+ routeStop.getStop().getSourceId() + dir, Charset.forName("UTF-8"));
+        final String answer = Browser.getContent("http://transport.orgp.spb.ru/Portal/transport/route/"+ routeStop.getRoute().getSourceId() +"/schedule/"+ routeStop.getStop().getSourceId() + dir, Charset.forName("UTF-8"));
 
         Document document = Jsoup.parseBodyFragment(answer);
         Element scheduleTable = document.getElementById("scheduleTable");
