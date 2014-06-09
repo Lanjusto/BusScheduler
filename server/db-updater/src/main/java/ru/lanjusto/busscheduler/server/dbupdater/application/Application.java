@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.wideplay.warp.persist.PersistenceService;
 import org.json.simple.parser.ParseException;
-import ru.lanjusto.busscheduler.server.dbupdater.datapicker.SPBPicker;
+import ru.lanjusto.busscheduler.server.dbupdater.datapicker.MosTransAvto;
 import ru.lanjusto.busscheduler.server.dbupdater.service.RouteMergeService;
 
 import javax.persistence.EntityManager;
@@ -31,12 +31,12 @@ public class Application {
         persistenceService.start();
 
         Calendar cal = Calendar.getInstance();
-      //  cal.add(Calendar.WEEK_OF_MONTH, -1);
+        cal.add(Calendar.WEEK_OF_MONTH, -1);
         Date expireDate = cal.getTime();
 
         //new DataPicker(em).pickData(expireDate);
 
-        new SPBPicker(em, routeMergeService).pickData(expireDate);
+        new MosTransAvto(em, routeMergeService).pickData(expireDate);
 
     }
 }

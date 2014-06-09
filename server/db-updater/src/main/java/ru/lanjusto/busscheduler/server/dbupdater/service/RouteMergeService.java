@@ -167,9 +167,13 @@ public class RouteMergeService {
                 .getResultList();
         for (RouteStop routeStop : routeStops) {
             // удаляем расписания остановки
-            em.get().createQuery("delete from RouteStopSchedule rs where rs.routeStop = :rs")
+            List<RouteStopSchedule> stopSchedules = em.get().createQuery("select rs from RouteStopSchedule rs where rs.routeStop = :rs")
                     .setParameter("rs", routeStop)
-                    .executeUpdate();
+                    .getResultList();
+            for (RouteStopSchedule stopSchedule : stopSchedules) {
+                stopSchedule.getTimes().clear();
+                em.get().remove(stopSchedule);
+            }
 
             em.get().remove(routeStop);
         }
