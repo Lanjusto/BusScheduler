@@ -1,8 +1,5 @@
 package ru.lanjusto.busscheduler.common.model;
 
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
-import ru.lanjusto.busscheduler.common.utils.Assert;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +16,7 @@ public class RouteStopSchedule {
     @Column(name = "id_route_stop_schedule")
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_route_stop", nullable = false)
     private RouteStop routeStop;
 

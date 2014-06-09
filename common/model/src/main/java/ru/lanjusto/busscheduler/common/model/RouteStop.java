@@ -62,6 +62,7 @@ public class RouteStop {
         this.route = route;
         this.stop = stop;
         this.direction = direction;
+        this.order = order;
     }
 
     public long getId() {
