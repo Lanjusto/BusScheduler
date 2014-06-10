@@ -35,7 +35,7 @@ public class MosTransAvto implements IDataPicker {
     private final RouteMergeService routeMergeService;
 
     private final String source = "MosTransAvto";
-    private final City city = City.PETERBURG;
+    private final City city = City.MOSCOW;
 
     public MosTransAvto(Provider<EntityManager> em, RouteMergeService routeMergeService) {
         this.em = em;
@@ -222,9 +222,6 @@ public class MosTransAvto implements IDataPicker {
         for (String region : regions) {
             log.info("список маршрутов района "+region);
             routes.addAll(getRegionRoutes(region));
-            if (routes.size() > 100) {
-                break;
-            }
         }
 
         return routes;
