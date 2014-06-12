@@ -4,4 +4,9 @@
     <string name="OnWeekend">По выходным</string>
     <string name="OnWorkDays">По будням</string>
     <string name="Now">Ближайшие</string>
+    <string name="SearchActivity.Title">Поиск</string>
+    <string name="Menu.Favorites">Избранное</string>
+    <string name="Menu.Search">Поиск</string>
+    <string name="Menu.Preferences">Настройки</string>
+    <string name="LocateButton">Текущее расположение</string>
 </resources>
