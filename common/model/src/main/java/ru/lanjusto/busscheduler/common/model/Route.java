@@ -4,7 +4,11 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Маршрут
@@ -167,7 +171,7 @@ public class Route {
         Route route = (Route) o;
 
         if (id == route.getId()) {
-            return true; //todo не уверен, что это всегда верно... Женя, посмотри
+            return true;
         }
 
         if (!num.equals(route.num)) {
