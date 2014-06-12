@@ -23,8 +23,12 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Анечка on 27.05.2014.
@@ -86,7 +90,7 @@ public class SPBPicker implements IDataPicker {
         em.get().getTransaction().commit();
 
         // удаляем остановки без связанных маршрутов
-        List<Stop> unusedStops = em.get().createQuery("select s from Stop s where not exists (select 1 from RouteStop rs where rs.stop=s)")
+        List<Stop> unusedStops = em.get().createQuery("select s from Stop s where not exists (select 1 from RouteStop rs where rs.stop=s)", Stop.class)
                 .getResultList();
         for (Stop unusedStop : unusedStops) {
             log.info("Удаляется неиспользуемая остановка "+unusedStop);
@@ -94,7 +98,7 @@ public class SPBPicker implements IDataPicker {
         }
 
         // удаляем так и не обновившиеся маршруты (если дошли то их не было в списке маршрутов на сайте)
-        List<Route> unupdatedRoutes = em.get().createQuery("select r from Route r where r.dtmUpdate<:dtm")
+        List<Route> unupdatedRoutes = em.get().createQuery("select r from Route r where r.dtmUpdate<:dtm", Route.class)
                 .setParameter("dtm", expireDate)
                 .getResultList();
         for (Route route : unupdatedRoutes) {
