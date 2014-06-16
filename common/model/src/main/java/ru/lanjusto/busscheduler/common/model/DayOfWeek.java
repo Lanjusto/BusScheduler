@@ -17,7 +17,7 @@ public enum DayOfWeek {
     SAT_SUN,
     MON_THU,
     FRI_SUN,
-    MON_SAT
+    FRI_SAT, MON_SAT
 
 
 }

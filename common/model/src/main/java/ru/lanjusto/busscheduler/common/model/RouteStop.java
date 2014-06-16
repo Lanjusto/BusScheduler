@@ -45,6 +45,10 @@ public class RouteStop {
     @Basic(optional = false)
     private boolean terminal;
 
+    @Column(name = "is_mandatory", nullable = false)
+    @Basic(optional = false)
+    private boolean mandatory;
+
     //TODO время работы в скобках
 
 
@@ -63,6 +67,7 @@ public class RouteStop {
         this.stop = stop;
         this.direction = direction;
         this.order = order;
+        this.mandatory = true;
     }
 
     public long getId() {
@@ -95,6 +100,14 @@ public class RouteStop {
 
     public Route getRoute() {
         return route;
+    }
+
+    public boolean isMandatory() {
+        return mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
     }
 
     @Override

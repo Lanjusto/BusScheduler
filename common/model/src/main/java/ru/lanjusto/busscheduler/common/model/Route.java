@@ -115,7 +115,7 @@ public class Route {
             }
         });
 
-        return routeStops;
+        return resultList;
     }
 
     public City getCity() {

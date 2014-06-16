@@ -40,7 +40,7 @@ public class Browser {
     }
 
     public static String readAnswer(HttpURLConnection urlConnection, Charset charset) throws IOException {
-        Assert.equals(urlConnection.getResponseCode(), HttpURLConnection.HTTP_OK);
+        Assert.equals(urlConnection.getResponseCode(), HttpURLConnection.HTTP_OK, "Ошибка HTTP GET "+urlConnection.getURL());
 
         final StringBuilder sb = new StringBuilder();
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), charset))) {

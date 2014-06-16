@@ -104,10 +104,8 @@ public class RouteMergeService {
     }
 
     public Stop mergeStop(String name, City city, String source, Coordinates coordinates) {
-        // в том же источнике по имени
+        // в том же источнике по имени и координатам
         // потом вообще везде по сусекам
-
-        log.debug("Рекомендуется искать остановки по внутреннему идентификатору источника через mergeStopById.");
 
         List<Stop> stops = em.get()
                 .createQuery("select s from Stop s where s.name=:name and s.city=:city and s.source=:source")
@@ -116,7 +114,7 @@ public class RouteMergeService {
                 .setParameter("source", source)
                 .getResultList();
 
-        if (stops.size() > 1) {
+        if (stops.size() > 0) {
             //ищем  с теми же координатами (если они есть...)
             for (Stop stop : stops) {
                 if ((stop.getCoordinates() == null && coordinates == null)
@@ -125,33 +123,23 @@ public class RouteMergeService {
                     return stop;
                 }
             }
-        }
+        } else {
+            // поищем в других источниках...
+            stops = em.get()
+                    .createQuery("select s from Stop s where s.name=:name and s.city=:city")
+                    .setParameter("name", name)
+                    .setParameter("city", city)
+                    .getResultList();
 
-        if (stops.size() > 0) {
-            Stop stop = stops.get(0);
-            if (stop.getCoordinates() != null && !stop.getCoordinates().equals(coordinates)) {
-                stop.setSource(source);
-                stop.setCoordinates(coordinates);
+            if (stops.size() > 0) {
+                //ищем  с теми же координатами (если они есть...)
+                for (Stop stop : stops) {
+                    if (coordinates == null || stop.getCoordinates().equals(coordinates)) {
+                        stop.setUpdateTime(new Date());
+                        return stop;
+                    }
+                }
             }
-            stop.setUpdateTime(new Date());
-            return stop;
-        }
-
-        // поищем в других источниках...
-        stops = em.get()
-                .createQuery("select s from Stop s where s.name=:name and s.city=:city")
-                .setParameter("name", name)
-                .setParameter("city", city)
-                .getResultList();
-
-        if (stops.size() > 0) {
-            if (coordinates != null && stops.get(0).getCoordinates() == null) {
-                stops.get(0).setCoordinates(coordinates);
-                stops.get(0).setSource(source);
-            }
-            stops.get(0).setUpdateTime(new Date());
-
-            return stops.get(0);
         }
 
         // не нашли, создадим новую
