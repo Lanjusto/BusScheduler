@@ -3,7 +3,7 @@ package ru.lanjusto.busscheduler.server.api;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.wideplay.warp.persist.PersistenceService;
-import com.wideplay.warp.persist.jpa.JpaUnit;
+import com.wideplay.warp.jpa.JpaUnit;
 
 
 public class DbModule implements Module {

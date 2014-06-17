@@ -5,9 +5,11 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import com.google.inject.Guice;
+import org.json.simple.parser.ParseException;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -17,7 +19,7 @@ import java.util.logging.LogManager;
  * Стартёр.
  */
 public class ApplicationStarter {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ParseException {
         configureLogging();
 
         final Application app = Guice.createInjector(new DbModule("production")).getInstance(Application.class);
