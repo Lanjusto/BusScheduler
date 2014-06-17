@@ -3,7 +3,13 @@ package ru.lanjusto.busscheduler.server.dbupdater.service;
 import com.google.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.lanjusto.busscheduler.common.model.*;
+import ru.lanjusto.busscheduler.common.model.City;
+import ru.lanjusto.busscheduler.common.model.Coordinates;
+import ru.lanjusto.busscheduler.common.model.Route;
+import ru.lanjusto.busscheduler.common.model.RouteStop;
+import ru.lanjusto.busscheduler.common.model.RouteStopSchedule;
+import ru.lanjusto.busscheduler.common.model.Stop;
+import ru.lanjusto.busscheduler.common.model.VehicleType;
 
 import javax.persistence.EntityManager;
 import java.util.Date;
@@ -31,7 +37,7 @@ public class RouteMergeService {
      * @return
      */
     public Route getRoute(City city, String num, VehicleType type, String source, String description, boolean forceSource) {
-        List<Route> routes = em.get().createQuery("select r from Route r where r.city=:city and r.num=:num and r.vehicleType=:type")
+        List<Route> routes = em.get().createQuery("select r from Route r where r.city=:city and r.num=:num and r.vehicleType=:type", Route.class)
                 .setParameter("city", city)
                 .setParameter("num", num)
                 .setParameter("type", type)
@@ -55,7 +61,7 @@ public class RouteMergeService {
     }
 
     public Route getRouteById(City city, String source, String sourceId, VehicleType type, String num, String description) {
-        List<Route> routes = em.get().createQuery("select r from Route r where r.city=:city and r.source=:source and r.sourceId=:sourceId")
+        List<Route> routes = em.get().createQuery("select r from Route r where r.city=:city and r.source=:source and r.sourceId=:sourceId", Route.class)
                 .setParameter("city", city)
                 .setParameter("source", source)
                 .setParameter("sourceId", sourceId)
@@ -108,7 +114,7 @@ public class RouteMergeService {
         // потом вообще везде по сусекам
 
         List<Stop> stops = em.get()
-                .createQuery("select s from Stop s where s.name=:name and s.city=:city and s.source=:source")
+                .createQuery("select s from Stop s where s.name=:name and s.city=:city and s.source=:source", Stop.class)
                 .setParameter("name", name)
                 .setParameter("city", city)
                 .setParameter("source", source)
@@ -118,7 +124,7 @@ public class RouteMergeService {
             //ищем  с теми же координатами (если они есть...)
             for (Stop stop : stops) {
                 if ((stop.getCoordinates() == null && coordinates == null)
-                        || stop.getCoordinates().equals(coordinates)) {
+                    || (stop.getCoordinates() != null && stop.getCoordinates().equals(coordinates))) {
                     stop.setUpdateTime(new Date());
                     return stop;
                 }
@@ -126,7 +132,7 @@ public class RouteMergeService {
         } else {
             // поищем в других источниках...
             stops = em.get()
-                    .createQuery("select s from Stop s where s.name=:name and s.city=:city")
+                    .createQuery("select s from Stop s where s.name=:name and s.city=:city", Stop.class)
                     .setParameter("name", name)
                     .setParameter("city", city)
                     .getResultList();
@@ -155,7 +161,7 @@ public class RouteMergeService {
                 .getResultList();
         for (RouteStop routeStop : routeStops) {
             // удаляем расписания остановки
-            List<RouteStopSchedule> stopSchedules = em.get().createQuery("select rs from RouteStopSchedule rs where rs.routeStop = :rs")
+            List<RouteStopSchedule> stopSchedules = em.get().createQuery("select rs from RouteStopSchedule rs where rs.routeStop = :rs", RouteStopSchedule.class)
                     .setParameter("rs", routeStop)
                     .getResultList();
             for (RouteStopSchedule stopSchedule : stopSchedules) {
