@@ -1,8 +1,11 @@
 package ru.lanjusto.busscheduler.android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import ru.lanjusto.busscheduler.common.model.Time;
 
 import java.util.ArrayList;
@@ -33,5 +36,15 @@ public class StopScheduleActivity extends Activity {
 
         // присваиваем адаптер списку
         lstStopSchedule.setAdapter(adapter);
+
+        // ссылка на дисклеймер
+        final TextView disclaimerLink = (TextView) findViewById(R.id.disclaimerLink);
+        disclaimerLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(StopScheduleActivity.this, DisclaimerActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

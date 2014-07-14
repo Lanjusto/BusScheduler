@@ -17,6 +17,9 @@
         <activity android:name=".StopScheduleActivity"
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.Light" />
+        <activity android:name=".DisclaimerActivity"
+                  android:label="@string/app_name"
+                  android:theme="@android:style/Theme.Light" />
         <!--<activity android:name=".RouteActivity" android:label="@string/app_name" />
         <activity android:name=".TimetableActivity" android:label="@string/app_name" />-->
     </application>

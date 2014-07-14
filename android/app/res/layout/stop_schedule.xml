@@ -82,15 +82,18 @@
             android:layout_weight="1">
     </ListView>
     <TextView
-            android:id="@+id/disclaimer"
+            android:id="@+id/disclaimerLink"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/Disclaimer"
+            android:text="@string/DisclaimerLink"
             android:autoLink="web"
             android:textSize="12sp"
             android:layout_marginBottom="7dp"
             android:layout_marginTop="7dp"
             android:textColor="@color/link"
             />
+    <include layout="@layout/menu"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content" />
 </LinearLayout>
