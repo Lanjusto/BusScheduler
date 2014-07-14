@@ -13,24 +13,13 @@ import java.nio.charset.Charset;
 /**
  * Типа, браузер
  */
+//todo вот вот - разбили проект по частям и приходится клонировать "Браузер"
 public class Browser {
     @NotNull
-    public static String getContent(@NotNull String url) throws IOException {
+    public static String getContent(@NotNull String url, Charset charset) throws IOException {
         final URL urlUrl = new URL(url);
         final HttpURLConnection urlConnection = (HttpURLConnection) urlUrl.openConnection();
-        Assert.equals(urlConnection.getResponseCode(), HttpURLConnection.HTTP_OK);
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), Charset.forName("CP1251")));
-
-        try {
-            final StringBuilder sb = new StringBuilder();
-            String inputLine;
-            while ((inputLine = reader.readLine()) != null) {
-                sb.append(inputLine);
-            }
-            return sb.toString();
-        } finally {
-            reader.close();
-        }
+        return readAnswer(urlConnection, charset);
     }
 
     public static URL getUrlAfterRedirecting(@NotNull String url) throws IOException {
@@ -49,4 +38,21 @@ public class Browser {
         urlConnection.getResponseCode();
         return urlConnection.getURL();
     }
+
+    public static String readAnswer(HttpURLConnection urlConnection, Charset charset) throws IOException {
+        Assert.equals(urlConnection.getResponseCode(), HttpURLConnection.HTTP_OK, "Ошибка HTTP GET "+urlConnection.getURL());
+
+        final StringBuilder sb = new StringBuilder();
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), charset))) {
+            String inputLine;
+            while ((inputLine = reader.readLine()) != null) {
+                sb.append(inputLine);
+            }
+        }
+
+        return sb.toString();
+    }
+
+
+
 }

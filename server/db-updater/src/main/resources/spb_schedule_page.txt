@@ -1,0 +1,676 @@
+GET http://transport.orgp.spb.ru/Portal/transport/route/1743/schedule
+
+
+html:
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta content="IE=8" http-equiv="X-UA-Compatible"/><title>Расписание маршрута № 75 по остановочному пункту А.С. &#034;УЛ. ЖЕНИ ЕГОРОВОЙ&#034; (ВЫСАДКИ И ПОСАДКИ НЕТ) - Портал общественного транспорта Санкт-Петербурга</title><link href="/Portal/styles/themes/umitheme/jquery-ui-1.8.6.custom.css" type="text/css" rel="stylesheet"/><link href="/Portal/styles/style.css" type="text/css" rel="stylesheet"/><link href="/Portal/styles/spb/design_style.css" type="text/css" rel="stylesheet"/><link href="/Portal/styles/grid.css" type="text/css" rel="stylesheet"/><link href="/Portal/styles/table_jui.css" type="text/css" rel="stylesheet"/><link href="/Portal/styles/jquery.imageZoom.css" type="text/css" rel="stylesheet"/><link href="/Portal/styles/jquery.tooltip.css" type="text/css" rel="stylesheet"/><link href="/Portal/styles/raspisanie_marshruta.css" type="text/css" rel="stylesheet"/><link href="/Portal/styles/rassylki.css" type="text/css" rel="stylesheet"/><script src="/Portal/js/jquery-1.7.1.min.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/textshadow.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/scripts.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/jquery-ui-1.8.6.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/ui.datepicker-ru.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/jquery.example-1.4.3.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/domainTables_lang_ru.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/jquery.dataTables-1.7.4.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/date.format.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/jquery-deep.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/jquery-ext.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/jquery.imageZoom.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/OpenLayers-2.11/OpenLayers.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/OpenLayers-2.11/OpenLayers_ru.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/OpenLayers-2.11/OpenLayers_fix.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/commonDialogs.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/star-rating/jquery.MetaData.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/star-rating/jquery.rating.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/jquery.jclock.js" type="text/javascript">
+    //
+  </script><link href="/Portal/js/star-rating/jquery.rating.css" type="text/css" rel="stylesheet"/><script type="text/javascript">
+    var urlSubstContext =
+    {
+      location: window.location
+    };
+
+    var Context =
+    {
+      link: "/Portal/transport",
+      images: "/Portal/images",
+      baseMapServerUrl: OpenLayers.String.format("http://${location.host}/tms/", urlSubstContext),
+      vehicleServerUrl: OpenLayers.String.format("http://${location.host}/cgi-bin/mapserv", urlSubstContext),
+      vehicleRefreshTimeout: "15",
+      arrivingTimeRefreshTimeout: "30",
+      routeServerUrl: OpenLayers.String.format("http://${location.host}/cgi-bin/orgp/mapserv", urlSubstContext),
+      routeId: "1743",
+      defaultCenterLon: 30.34,
+      defaultCenterLat: 59.985,
+      defaultZoom: 14
+    };
+  </script><script src="/Portal/js/mapOptions_ru.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/mapOptions.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/domainTables.js" type="text/javascript">
+    //
+  </script><script src="http://esir.gov.spb.ru/static/widget/js/widget.js" type="text/javascript">
+      //
+    </script></head><body><div class="container"><div class="wrapper"><div xmlns="http://www.w3.org/1999/xhtml" class="top_line"><ul class="left"><li class=""><a href="/Portal/transport/main"><img alt="" src="/Portal/images/home_icon.gif"/></a></li><li class=""><a href="/Portal/transport/routes"><span class="menu_button">Маршруты</span></a></li><li class=""><a href="/Portal/transport/stops"><span class="menu_button">Остановки</span></a></li><li class=""><a href="/Portal/transport/orgs"><span class="menu_button">Перевозчики</span></a></li><li class=""><a href="/Portal/transport/help"><span class="menu_button">?</span></a></li></ul><ul class="right"><li><a id="login-user-link" href="#"><span class="menu_button">Войти<img alt="" src="/Portal/images/arrow_down.png"/></span></a></li><li><a id="register-user-link" href="#"><span class="menu_button">Регистрация<img alt="" src="/Portal/images/arrow_down.png"/></span></a></li><li><a id="recover-password-link" href="#"><span class="menu_button">Восстановить пароль<img alt="" src="/Portal/images/arrow_down.png"/></span></a></li><li class="jclock"/></ul><script type="text/javascript">
+    $(document).ready(function ()
+    {
+      var options = {
+        timeNotation:'24h',
+        am_pm:false,
+        foreground:'',
+        background:'',
+        utc:false
+      };
+      $('.jclock').jclock(options);
+
+      function errorCallback(xhr, status, e)
+      {
+        CommonDialogs.error("Ошибка", xhr.statusText);
+      }
+
+      function successCallback(data, textStatus, xhr)
+      {
+        // data:AJAXResponse
+        if( data.success )
+        {
+          window.location.reload();
+        }
+        else
+        {
+          // data.result:ExceptionResult
+          var msg = data.result.desc != null ? data.result.desc : data.result.exceptionId;
+          CommonDialogs.error("Ошибка", msg);
+        }
+      }
+
+      $("#lang").change(function ()
+      {
+        $.ajax({
+          context:this,
+          url:"/Portal/transport/changeLang",
+          data:{"lang":$("#lang").val()},
+          success:successCallback,
+          error:errorCallback
+        });
+      });
+    });
+  </script></div><div class="ntop"><div><a class="logo" href="/Portal/transport/main"><span>Портал общественного транспорта<br/> Санкт-Петербурга</span></a><span class="banner banner_ru"> </span><a href="/Portal/transport/izmenenya"><span class="banner good-look-text" style="top: 10px; left: 790px; font-size: 9px; padding: 8px; height: 52px; text-decoration: none; width: 214px; background-color: rgb(245, 245, 245); border: 1px solid rgb(220, 220, 220); color: rgb(0, 0, 0);"><span style="color:red; font-weight:bold; font-size:11px;">Внимание!</span><br/>Изменения маршрутов в связи с проведением Петербургского международного экономического форума</span></a><a class="logo2" target="_blank" href="http://www.orgp.spb.ru/"> </a></div><div class="top_line"><ul class="right lang_menu"><li><a href="?lang=ru"><span class="menu_button">Рус</span></a></li><li><a href="?lang=en"><span class="menu_button">En</span></a></li><li><a href="?lang=de"><span class="menu_button">De</span></a></li></ul></div></div><script src="/Portal/js/validate/jquery.validate.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/validate/additional-methods.js" type="text/javascript">
+    //
+  </script><script src="/Portal/js/validate/messages_ru.js" type="text/javascript">
+    //
+  </script><div style="display:none; text-align: left;" title="Вход" id="login-dialog"><p class="validateTips">все поля обязательны для заполнения</p><form method="post" id="login-form"><div style="border: 2px solid #E2E2E2"><table style="margin: 10px"><tr><td><label for="login-email">E-mail (логин)</label></td><td><input class="text ui-widget-content ui-corner-all" id="login-email" name="j_username" type="text"/></td></tr><tr><td><label for="login-password">Пароль</label></td><td><input class="text ui-widget-content ui-corner-all" id="login-password" name="j_password" type="password"/></td></tr><tr><td><label for="login-rememberme">Запомнить</label></td><td><input id="login-rememberme" name="_spring_security_remember_me" type="checkbox"/></td></tr></table></div></form></div><script type="text/javascript">
+    $(function()
+    {
+      var doLogin = function()
+      {
+        var successCallback = function(data, textStatus, xhr)
+        {
+          // data:AJAXResponse
+          if( data.success )
+          {
+            window.location.reload();
+            // $(this).dialog("close");
+          }
+          else
+          {
+            // data.result:ExceptionResult
+
+            var msg = data.result.desc != null ? data.result.desc : data.result.exceptionId;
+
+            //            CommonDialogs.error("Ошибка", msg);
+            CommonDialogs.error("Ошибка", "Неверное имя или пароль");
+          }
+        };
+
+        var errorCallback = function (xhr, status, e)
+        {
+          CommonDialogs.error("Ошибка", xhr.statusText);
+        };
+
+        $.ajax({
+          context: this,
+          url: "/Portal/transport/login/authenticate",
+          data: $("#login-form").serialize(),
+          success: successCallback,
+          error: errorCallback
+        });
+      };
+
+      $("#login-dialog").dialog(
+      {
+        autoOpen: false,
+        height: 320,
+        width: 400,
+        modal: true,
+        onEnter: doLogin,
+        buttons:
+        {
+          'Войти': doLogin,
+          "Отмена": function()
+          {
+            $("#login-form")[0].reset();
+            $(this).dialog("close");
+          }
+        }
+      });
+
+      $("#login-user-link").click(function()
+      {
+        $("#login-dialog").dialog("open");
+
+        return false;
+      });
+
+
+      $("#login-form input:submit").button().click(function()
+      {
+      });
+    });
+  </script><div style="display:none; text-align: left;" title="Регистрация" id="register-dialog"><p class="validateTips">все поля обязательны для заполнения</p><form action="/Portal/transport/register" method="post" id="register-form"><div style="border: 2px solid #E2E2E2"><table style="margin: 10px"><tr><td><label for="email">E-mail (логин)</label></td><td><input class="text ui-widget-content ui-corner-all input" maxlength="200" value="" id="email" name="email" type="text"/><div id="email-error"/></td></tr><tr><td><label for="first-name">Имя</label></td><td><input class="text ui-widget-content ui-corner-all input" maxlength="200" id="first-name" name="first-name" type="text"/><div id="first-name-error"/></td></tr><tr><td><label for="last-name">Фамилия</label></td><td><input class="text ui-widget-content ui-corner-all input" maxlength="200" id="last-name" name="last-name" type="text"/><div id="last-name-error"/></td></tr></table></div></form></div><div style="display:none; text-align: left;" title="Восстановление пароля" id="recover-password-dialog"><p class="validateTips">все поля обязательны для заполнения</p><form action="/Portal/transport/reсover" method="post" id="recover-password-form"><div style="border: 2px solid #E2E2E2"><table style="margin: 10px"><tr><td><label for="user-email">Введите Ваш E-mail адрес (на него будет выслано письмо с новым паролем)</label></td></tr><tr><td><input style="width: 200px" class="text ui-widget-content ui-corner-all" value="" id="user-email" name="user-email" type="text"/></td></tr></table></div></form></div><script type="text/javascript">
+    var rfValidator;
+
+    $(function()
+    {
+      rfValidator = $("#register-form").validate({
+
+        rules: {
+          email:
+          {
+            required: true, maxlength: 255, email: true
+          },
+          'first-name':
+          {
+            required: true, maxlength: 200
+          },
+          'last-name':
+          {
+            required: true, maxlength: 200
+          }
+        },
+
+        messages: {
+          email:
+          {
+            required: 'Введите адрес электронной почты',
+            email: 'Введите правильный E-mail адрес',
+            maxlength: 'Адрес электронной почты не должен быть длиннее 255 символов'
+          },
+          'first-name':
+          {
+            required: 'Введите имя',
+            maxlength: 'Имя не должно первышать 200 символов'
+          },
+          'last-name':
+          {
+            required: 'Введите фамилию',
+            maxlength: 'Фамилия не должна первышать 200 символов'
+          }
+        },
+
+        errorPlacement:
+           function(error, element)
+           {
+             error.appendTo($("#" + element.attr("id") + "-error"));
+           }
+      });
+
+
+      $("#register-dialog").dialog(
+      {
+        autoOpen: false,
+        height: 320,
+        width: 400,
+        modal: true,
+        buttons:
+        {
+          'Зарегистрироваться': function()
+          {
+            $("#register-form").validate();
+
+            if( !$("#register-form").valid() ) return false;
+
+            var waitPleaseDlg = CommonDialogs.waitPlease("Регистрация",
+               "Выполнение регистрации пользователя...");
+
+            var successCallback = function(data, textStatus, xhr)
+            {
+              waitPleaseDlg.dialog("close");
+
+              // data:AJAXResponse
+              if( data.success )
+              {
+                $(this).dialog("close");
+
+                CommonDialogs.information
+                   ('Регистрация завершена',
+                      'Параметры регистрации были отправлены на указаный Вами E-mail адрес');
+              }
+              else
+              {
+                // data.result:ExceptionResult
+
+                var msg = data.result.exceptionId + ": " + data.result.desc;
+
+                if( data.result.exceptionId == "UserAlreadyRegistered" )
+                  msg = 'Пользователь с такими данными уже зарегистрирован';
+
+                CommonDialogs.error("Ошибка при регистрации", msg);
+              }
+            };
+
+            var errorCallback = function (xhr, status, e)
+            {
+              waitPleaseDlg.dialog("close");
+
+              CommonDialogs.error("Ошибка при регистрации", xhr.statusText);
+            };
+
+            $.ajax({
+              context: this,
+              url: "/Portal/transport/register",
+              data: $("#register-form").serialize(),
+              success: successCallback,
+              error: errorCallback
+            });
+          },
+          "Отмена": function()
+          {
+            $(this).dialog("close");
+          }
+        },
+        close: function()
+        {
+          $("#register-form")[0].reset();
+        }
+      });
+
+      $("#register-user-link").click(function()
+      {
+        rfValidator.resetForm();
+        $("#register-dialog").dialog("open");
+
+        return false;
+      });
+
+      $('#recover-password-dialog').keypress(function(e)
+      {
+        if( e.keyCode == $.ui.keyCode.ENTER )
+        {
+          return false;
+        }
+      });
+
+      $("#recover-password-dialog").dialog(
+      {
+        autoOpen: false,
+        height: 240,
+        width: 400,
+        modal: true,
+        buttons:
+        {
+          'Восстановить пароль': function()
+          {
+            var emailAddress = $("#user-email").val();
+            if( emailAddress == "" )
+            {
+              CommonDialogs.error('Введите Ваш E-mail адрес',
+                 'Введите Ваш E-mail адрес');
+              return false;
+            }
+
+
+            var waitPleaseDlg = CommonDialogs.waitPlease("Восстановление пароля",
+               'Выполнение восстановления пароля пользователя...');
+
+            var successCallback = function(data, textStatus, xhr)
+            {
+              waitPleaseDlg.dialog("close");
+
+              // data:AJAXResponse
+              if( data.success )
+              {
+                $(this).dialog("close");
+                CommonDialogs.information
+                   ('Восстановление пароля завершено',
+                      'Новый пароль был отправлен на указаный Вами E-mail адрес');
+              }
+              else
+              {
+                var msg = data.result.exceptionId;
+                CommonDialogs.error('Ошибка при восстановлении пароля', msg);
+              }
+            };
+
+            var errorCallback = function (xhr, status, e)
+            {
+              waitPleaseDlg.dialog("close");
+              CommonDialogs.error('Ошибка при восстановлении пароля', xhr.statusText);
+            };
+
+            $.ajax({
+              context: this,
+              url: "/Portal/transport/recover",
+              data: $("#recover-password-form").serialize(),
+              success: successCallback,
+              error: errorCallback
+            });
+          },
+          "Отмена": function()
+          {
+            $(this).dialog("close");
+          }
+        },
+        close: function()
+        {
+          $("#recover-password-form")[0].reset();
+        }
+      });
+
+
+      $("#recover-password-link").click(function()
+      {
+        $("#recover-password-dialog").dialog("open");
+
+        return false;
+      });
+    });
+  </script><script src="/Portal/js/jquery.easyListSplitter-1.0.2.js" type="text/javascript">
+    //
+  </script><script type="text/javascript">
+    var stopsTabPane;
+    var routesTable;
+
+    // Переопределение ссылки в колонке расписания для позиционирования сразу на текущую остановку
+    var scheduleLinkColumn =
+    {
+      sName: "scheduleLinkColumn",
+      sTitle: "Расписание",
+      bSearchable: false,
+      bSortable: false,
+      sClass: "center",
+      fnRender: function(obj)
+      {
+        var id = obj.aData[ 0 ];
+
+        return "<a href='" + Context.link + "/route/" + id + "/schedule/3799'>"
+           + "<img src='" + Context.images + "/schedule.gif' alt='Посмотреть}' title='Посмотреть}'/></a>";
+      }
+    };
+
+    var columns = Domain.Route.columns.concat([]);
+
+    // Убираем колонку типа транспорта и заменяем колонку расписания
+    columns.splice(1, 1);
+    //    columns.splice(7, 1);
+    columns.splice(9, 1);
+
+    columns = $.map(columns, function(column, i)
+    {
+      if( column.sName == "scheduleLinkColumn" )
+      {
+        return scheduleLinkColumn;
+      }
+
+      return column;
+    });
+
+    $(window).load(function()
+    {
+      mapControl = new OpenLayers.Map("map", mapOptions);
+
+      var poiStyle = new OpenLayers.Style(
+      {
+        graphicTitle: "${name}"
+      },
+      {
+        rules:
+           [
+             new OpenLayers.Rule(
+             {
+               minScaleDenominator: 100000,
+               symbolizer:
+               {
+                 pointRadius: 2,
+                 graphicName: "square",
+                 strokeColor: "${picColor}",
+                 fillColor: "${picColor}"
+               }
+             }),
+             new OpenLayers.Rule(
+             {
+               elseFilter: true,
+               symbolizer:
+               {
+                 graphicHeight: 23,
+                 graphicWidth: 17,
+                 externalGraphic: "/Portal/images/poi/stop/${picName}-stop-small.png"
+               }
+             })
+           ]
+      });
+
+      poiLayer = new OpenLayers.Layer.Vector('Остановки',
+      {
+        styleMap: new OpenLayers.StyleMap(poiStyle)
+      });
+
+
+      var stageStyle =
+      {
+        strokeColor:"#8899AA",
+        strokeWidth: 3/*,
+       fillColor: "red",
+       pointRadius: 5*/
+      };
+
+
+      var stageLayer = new OpenLayers.Layer.WFS("Трасса",
+         "/Portal/transport/map/stage",
+      {
+        route: "1743"
+      },
+      {
+        format: OpenLayers.Format.GeoJSON,
+        styleMap: new OpenLayers.StyleMap(stageStyle)
+      });
+
+
+      mapControl.addLayers([stageLayer, poiLayer]);
+
+
+      var poiSelectControl = new OpenLayers.Control.SelectFeature(poiLayer,
+      {
+        clickout: true
+      });
+
+      poiLayer.events.on(
+      {
+        "featureselected": function(e)
+        {
+          var id = e.feature.attributes.id;
+          window.location.href = '/Portal/transport/stop/' + id;
+        }
+      });
+
+
+      mapControl.addControls([poiSelectControl]);
+
+      poiSelectControl.activate();
+
+
+      var successCallback = function(data, textStatus, xhr)
+      {
+        var poiFeatures = [];
+        var features = data.features;
+        for( var rowIndex = 0; rowIndex < features.length; rowIndex++ )
+        {
+          var poi = features[rowIndex];
+
+          var point = new OpenLayers.Geometry.Point(poi.geometry.coordinates[0], poi.geometry.coordinates[1]);
+
+          if( 3799 == poi.properties.id
+        )
+          {
+            poi.properties.picName = "bus-selected";
+            poi.properties.picColor = "red";
+          }
+        else
+          {
+            poi.properties.picName = "bus";
+            poi.properties.picColor = "#154BD8";
+          }
+
+          var feature = new OpenLayers.Feature.Vector(point, poi.properties);
+
+          poiFeatures.push(feature);
+        }
+
+        poiLayer.removeAllFeatures();
+
+        if( poiFeatures.length != 0 )
+          poiLayer.addFeatures(poiFeatures);
+      };
+
+      var errorCallback = function (xhr, status, e)
+      {
+        CommonDialogs.error('', xhr.statusText);
+      };
+
+      $.ajax({
+        url: "/Portal/transport/map/poi",
+        data:
+        {
+          ROUTE: "1743",
+          REQUEST: "GetFeature"
+        },
+
+        type: 'GET',
+        success: successCallback,
+        error: errorCallback
+      });
+
+
+      var poiPosition = new OpenLayers.LonLat(3374681.3102165284, 8414161.648028087);
+
+
+      mapControl.setCenter(poiPosition);
+
+      stopsTabPane = $("#stopsTabPane").tabs(
+      {
+        selected: 0
+      });
+
+      $('#scheduleTable').dataTable(
+      {
+        oLanguage: { sUrl: "/Portal/js/dataTables_ru.json" },
+        sDom: "t",
+        bJQueryUI: true,
+        bProcessing: false,
+        bFilter: false,
+        bInfo: false,
+        bAutoWidth: false,
+        bPaginate: false,
+        bLengthChange: false,
+        bSort: false
+      });
+
+
+
+
+
+      routesTable = $('#routesTable').dataTable(
+      {
+        oLanguage: { sUrl: "/Portal/js/dataTables_ru.json" },
+        aoColumns: columns,
+        // По умолчанию сортировка по номеру
+        aaSorting:
+           [
+             [1,'asc']
+           ],
+        sAjaxSource: "/Portal/transport/stop/3799/routes",
+        fnServerData: DataTablesExt.addFilterParam,
+        bJQueryUI: true,
+        bProcessing: true,
+        bFilter: false,
+        bInfo: false,
+        sPaginationType: 'two_button',
+        bServerSide: true,
+        bAutoWidth: false
+      });
+    });
+  </script><script type="text/javascript">
+      $(window).load(function()
+      {
+        $('#direct-stops-list, #return-stops-list').easyListSplitter
+           ({
+             colNumber: 2,
+             direction: 'vertical'
+           });
+      });
+    </script><div class="content innerpage"><div class="breadcrumbs"><a href="/Portal/transport/routes">Маршруты</a><span class="separator">/</span>Расписание остановочного пункта</div><h4>Расписание маршрута № 75 по остановочному пункту А.С. &#034;УЛ. ЖЕНИ ЕГОРОВОЙ&#034; (ВЫСАДКИ И ПОСАДКИ НЕТ)</h4><div style="height:400px; margin-left: 0" id="map" class="nmap"/><div class="clear">­</div></div><div class="ncontent innerpage"><h3>Информация по выбранному маршруту</h3><div class="routing_info rel"><div class="routing_directions"><div id="stopsTabPane"><ul><li><a href="#direct-stops">Туда</a></li><li><a href="#return-stops">Обратно</a></li></ul><div id="direct-stops"><div class="rel"><ul class="routing_direction_ul" id="direct-stops-list"><li>
+                            А.С. "УЛ. ЖЕНИ ЕГОРОВОЙ" (ВЫСАДКИ И ПОСАДКИ НЕТ) <span class="italic">(вы здесь)</span></li><li><a href="/Portal/transport/route/1743/schedule/22167/direct">УЛ. ЖЕНИ ЕГОРОВОЙ </a></li><li><a href="/Portal/transport/route/1743/schedule/1906/direct">ПР. ПРОСВЕЩЕНИЯ,УГ.УЛ. КОМПОЗИТОРОВ</a></li><li><a href="/Portal/transport/route/1743/schedule/4572/direct">ПР. ПРОСВЕЩЕНИЯ УГ. УЛ. СИМОНОВА</a></li><li><a href="/Portal/transport/route/1743/schedule/24298/direct">СТ. МЕТРО "ПР. ПРОСВЕЩЕНИЯ"</a></li><li><a href="/Portal/transport/route/1743/schedule/20565/direct">УЛ. ХО ШИ МИНА УГ. УЛ. КОМПОЗИТОРОВ (ТЕСТ)</a></li><li><a href="/Portal/transport/route/1743/schedule/2484/direct">ШУВАЛОВСКОЕ КЛАДБИЩЕ</a></li><li><a href="/Portal/transport/route/1743/schedule/2483/direct">ШУВАЛОВСКИЙ ПАРК</a></li><li><a href="/Portal/transport/route/1743/schedule/4479/direct">ПОС. ПАРГОЛОВО, ШКОЛА</a></li><li><a href="/Portal/transport/route/1743/schedule/4898/direct">ДЕТСКАЯ ТУРИСТИЧЕСКАЯ БАЗА</a></li><li><a href="/Portal/transport/route/1743/schedule/1763/direct">ПАРГОЛОВО,ТОРГОВЫЙ ЦЕНТР</a></li><li><a href="/Portal/transport/route/1743/schedule/17749/direct">УЛ.ШИШКИНА</a></li><li><a href="/Portal/transport/route/1743/schedule/4474/direct">ПОС. ПАРГОЛОВО, ПОЧТА</a></li><li><a href="/Portal/transport/route/1743/schedule/19784/direct">ПОС. ЛЕВАШОВО, УЛ. ТРУДА</a></li><li><a href="/Portal/transport/route/1743/schedule/19795/direct">УЛ. ЧКАЛОВА</a></li><li><a href="/Portal/transport/route/1743/schedule/25091/direct">ПОС. ЛЕВАШОВО, Ж.-Д. СТАНЦИЯ</a></li><li><a href="/Portal/transport/route/1743/schedule/19797/direct">УЛ. КАРЛА МАРКСА</a></li><li><a href="/Portal/transport/route/1743/schedule/19800/direct">ПОС. ЛЕВАШОВО, УЛ. КАРПОВА</a></li><li><a href="/Portal/transport/route/1743/schedule/25089/direct">4 КМ, КЛУБ, ПО ТРЕБОВАНИЮ</a></li><li><a href="/Portal/transport/route/1743/schedule/19727/direct">4 КМ, СТОЛОВАЯ</a></li><li><a href="/Portal/transport/route/1743/schedule/19725/direct">ПОС. НОВОСЕЛКИ, 5 КМ</a></li><li><a href="/Portal/transport/route/1743/schedule/25085/direct">ДОР. НА СТ. ГОРСКАЯ</a></li><li><a href="/Portal/transport/route/1743/schedule/19836/direct">69 КМ</a></li><li><a href="/Portal/transport/route/1743/schedule/19821/direct/finish">ПОС. НОВОСЕЛКИ, КАРЬЕР</a></li></ul></div></div><div id="return-stops"><div class="rel"><ul class="routing_direction_ul" id="return-stops-list"><li><a href="/Portal/transport/route/1743/schedule/19821/return">ПОС. НОВОСЕЛКИ, КАРЬЕР</a></li><li><a href="/Portal/transport/route/1743/schedule/19822/return">69 КМ</a></li><li><a href="/Portal/transport/route/1743/schedule/19722/return">ДОР. НА СТ. ГОРСКАЯ</a></li><li><a href="/Portal/transport/route/1743/schedule/19724/return">ПОС. НОВОСЕЛКИ, 5 КМ</a></li><li><a href="/Portal/transport/route/1743/schedule/25088/return">4 КМ, СТОЛОВАЯ</a></li><li><a href="/Portal/transport/route/1743/schedule/19789/return">4 КМ, КЛУБ</a></li><li><a href="/Portal/transport/route/1743/schedule/19798/return">ПОС. ЛЕВАШОВО, УЛ. КАРПОВА</a></li><li><a href="/Portal/transport/route/1743/schedule/25087/return">ПР. К. МАРКСА</a></li><li><a href="/Portal/transport/route/1743/schedule/25090/return">ПОС. ЛЕВАШОВО, Ж.-Д. СТАНЦИЯ (ВЫСАДКА)</a></li><li><a href="/Portal/transport/route/1743/schedule/19808/return">УЛ. ЧКАЛОВА</a></li><li><a href="/Portal/transport/route/1743/schedule/19809/return">ПОС. ЛЕВАШОВО, УЛ. ТРУДА</a></li><li><a href="/Portal/transport/route/1743/schedule/17924/return">РАЗВИЛКА</a></li><li><a href="/Portal/transport/route/1743/schedule/17923/return">ПОС. ПАРГОЛОВО, ПОЧТА</a></li><li><a href="/Portal/transport/route/1743/schedule/17757/return">УЛ. ШИШКИНА</a></li><li><a href="/Portal/transport/route/1743/schedule/2954/return">ПАРГОЛОВО,ТОРГОВЫЙ ЦЕНТР</a></li><li><a href="/Portal/transport/route/1743/schedule/4919/return">ДЕТСКАЯ ТУРИСТИЧЕСКАЯ БАЗА</a></li><li><a href="/Portal/transport/route/1743/schedule/4480/return">ПОС. ПАРГОЛОВО, ШКОЛА</a></li><li><a href="/Portal/transport/route/1743/schedule/21115/return">ЦФТ "ОЗЕРКИ"</a></li><li><a href="/Portal/transport/route/1743/schedule/4481/return">ШУВАЛОВСКИЙ ПАРК</a></li><li><a href="/Portal/transport/route/1743/schedule/3663/return">ШУВАЛОВСКОЕ КЛАДБИЩЕ</a></li><li><a href="/Portal/transport/route/1743/schedule/2388/return">УЛ. ХО ШИ МИНА УГ. УЛ. КОМПОЗИТОРОВ</a></li><li><a href="/Portal/transport/route/1743/schedule/3283/return">СТ. МЕТРО "ПР. ПРОСВЕЩЕНИЯ"</a></li><li><a href="/Portal/transport/route/1743/schedule/3098/return">ПР. ПРОСВЕЩЕНИЯ УГ. УЛ. СИМОНОВА</a></li><li><a href="/Portal/transport/route/1743/schedule/3425/return">УЛ. КОМПОЗИТОРОВ УГ. ПР. ПРОСВЕЩЕНИЯ</a></li><li><a href="/Portal/transport/route/1743/schedule/22166/return">УЛ. ЖЕНИ ЕГОРОВОЙ </a></li><li><a href="/Portal/transport/route/1743/schedule/3799/return">А.С. "УЛ. ЖЕНИ ЕГОРОВОЙ" (ВЫСАДКИ И ПОСАДКИ НЕТ)</a></li></ul></div></div></div></div><div class="shedule_block"><div class="shedule"><div class="shedule_debug"><table style="border-bottom: 1px solid #E2E2E2" id="scheduleTable"><thead><tr><th class="number">Час</th><th>
+                            Будние и субботние дни
+                          </th><th>
+                            Воскресенье
+                          </th></tr></thead><tbody><tr class="even"><td class="number"><span>05:
+                	        </span></td><td>28</td><td>33</td></tr><tr class="odd"><td class="number"><span>06:
+                	        </span></td><td>08, 30, 45</td><td></td></tr><tr class="even"><td class="number"><span>07:
+                	        </span></td><td>04, 45</td><td>05</td></tr><tr class="odd"><td class="number"><span>08:
+                	        </span></td><td>10, 35</td><td>00, 26, 46</td></tr><tr class="even"><td class="number"><span>09:
+                	        </span></td><td>06, 29</td><td>40</td></tr><tr class="odd"><td class="number"><span>10:
+                	        </span></td><td>23</td><td>16</td></tr><tr class="even"><td class="number"><span>11:
+                	        </span></td><td>13, 38</td><td>16, 46</td></tr><tr class="odd"><td class="number"><span>12:
+                	        </span></td><td>03, 33, 59</td><td>16, 46</td></tr><tr class="even"><td class="number"><span>13:
+                	        </span></td><td>24, 50</td><td>09, 32</td></tr><tr class="odd"><td class="number"><span>14:
+                	        </span></td><td>15, 40</td><td>00, 28, 53</td></tr><tr class="even"><td class="number"><span>15:
+                	        </span></td><td>05, 30, 45</td><td>18, 41</td></tr><tr class="odd"><td class="number"><span>16:
+                	        </span></td><td>22, 50</td><td>04, 27, 57</td></tr><tr class="even"><td class="number"><span>17:
+                	        </span></td><td>24</td><td>28</td></tr><tr class="odd"><td class="number"><span>18:
+                	        </span></td><td>00, 40</td><td>00, 35</td></tr><tr class="even"><td class="number"><span>19:
+                	        </span></td><td>21</td><td>39</td></tr><tr class="odd"><td class="number"><span>20:
+                	        </span></td><td>01</td><td>45</td></tr><tr class="even"><td class="number"><span>21:
+                	        </span></td><td>00, 50</td><td></td></tr><tr class="odd"><td class="number"><span>22:
+                	        </span></td><td>40</td><td>40</td></tr></tbody></table></div></div></div></div></div><form style="display:none;" id="routesTable-filter" action=""><input value="1743" name="current-route" type="hidden"/></form><div class="ncontent innerpage"><h3>Другие маршруты, проходящие через остановочный пункт</h3><table border="0" cellpadding="0" cellspacing="0" class="display" id="routesTable"><tr><td/></tr></table></div></div></div><div class="footer"><div class="footer_bg"><div class="wrapper"><ul class="footer_menu"><li><a href="/Portal/transport/main">Главная</a></li><li><a href="/Portal/transport/routes">Маршруты</a></li><li><a href="/Portal/transport/stops">Остановки</a></li><li><a href="/Portal/transport/orgs">Перевозчики</a></li></ul><div class="footer_phones"><b>Факс (812)388-96-60</b><div>­</div><br/><b>­</b><div>­</div></div><div class="footer_adress"><div>196084, Санкт-Петербург,</div><div>ул. Рубинштейна, д. 32, лит.А,</div></div><div class="footer_copyright"><div>
+            © Санкт-Петербургское</div><div>государственное казенное учреждение</div><div>«Организатор перевозок»</div></div><div class="nclear"/></div><div class="wrapper"><div class="" style="line-height:18px"><div>тел. (812) 576-55-55 для обращений по вопросам работы наземного городского пассажирского транспорта</div><div>тел. (812) 575-65-39, тел/факс. (812)575-65-40 по вопросам приобретения проездных документов</div></div></div></div></div><div class="footer_counter"><script language="javascript" type="text/javascript">
+      hotlog_js = "1.0";
+      hotlog_r = "" + Math.random() + "&s=2218553&im=304&r=" +
+         escape(document.referrer) + "&pg=" + escape(window.location.href);
+    </script><script language="javascript1.1" type="text/javascript">
+      hotlog_js = "1.1";
+      hotlog_r += "&j=" + (navigator.javaEnabled() ? "Y" : "N");
+    </script><script language="javascript1.2" type="text/javascript">
+      hotlog_js = "1.2";
+      hotlog_r += "&wh=" + screen.width + "x" + screen.height + "&px=" +
+         (((navigator.appName.substring(0, 3) == "Mic")) ? screen.colorDepth : screen.pixelDepth);
+    </script><script language="javascript1.3" type="text/javascript">
+      hotlog_js = "1.3";
+    </script><script language="javascript" type="text/javascript">
+      hotlog_r += "&js=" + hotlog_js;
+      document.write('<a href="http://click.hotlog.ru/?2218553" target="_blank"><img ' +
+         'src="http://hit40.hotlog.ru/cgi-bin/hotlog/count?' +
+         hotlog_r + '" border="0" width="88" height="31" title="HotLog: показано количество посетителей за сегодня, за вчера и всего" alt="HotLog"><\/a>');
+    </script><noscript><a target="_blank" href="http://click.hotlog.ru/?2218553"><img alt="HotLog" title="HotLog: показано количество посетителей за сегодня, за вчера и всего" height="31" width="88" border="0" src="http://hit40.hotlog.ru/cgi-bin/hotlog/count?s=2218553&im=304"/></a></noscript></div><div style="display:none; text-align: left;" title="Подождите, пожалуйста..." id="waitplease-dialog"><p><span id="waitplease-text">Подождите, пожалуйста...</span></p></div><div style="display:none; text-align: left;" title="Операция завершена" class="message-dialog" id="success-dialog"><p><span style="float:left; margin:0 7px 50px 0;" class="ui-icon ui-icon-circle-check"></span><span id="success-dialog-text">Операция успешно завершена.</span></p></div><div style="display:none; text-align: left;" title="Ошибка при выполнении" class="message-dialog" id="error-dialog"><p><span style="float:left; margin:0 7px 50px 0;" class="ui-icon ui-icon-alert"></span><span id="error-dialog-text">Сообщение об ошибке</span></p></div><div style="display:none; text-align: left;" id="confirm-dialog"><p><span style="float:left; margin:0 7px 50px 0;" class="ui-icon ui-icon-help"></span><span id="confirm-dialog-text"></span></p></div></body></html>

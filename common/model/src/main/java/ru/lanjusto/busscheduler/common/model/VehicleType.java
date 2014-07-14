@@ -8,5 +8,9 @@ public enum VehicleType {
 
     TROLLEYBUS,
 
-    TRAM
+    TRAM,
+
+    MINIBUS,
+
+    AQUABUS
 }
