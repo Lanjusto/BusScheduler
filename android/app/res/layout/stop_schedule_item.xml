@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content">
+        <TextView
+                android:layout_width="75dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/departureTime"
+                android:layout_marginRight="20dp"
+                android:textSize="28sp"
+                android:gravity="right"
+                />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/restingTime"
+                android:layout_marginRight="12dp"
+                android:textSize="12sp"
+                android:gravity="center"
+                />
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content">
+        <TextView
+                android:layout_width="75dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/routeNum"
+                android:layout_marginRight="10dp"
+                android:gravity="right"
+                android:textSize="20sp"
+                />
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/destinationPoint"
+                android:textSize="12sp"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                />
+
+    </LinearLayout>
+</LinearLayout>

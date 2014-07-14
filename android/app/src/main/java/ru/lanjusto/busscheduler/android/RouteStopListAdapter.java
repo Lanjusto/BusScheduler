@@ -35,7 +35,7 @@ class RouteStopListAdapter extends ArrayAdapter<RouteStop> {
 
             holder = new RouteStopHolder();
             holder.nameView = (TextView) row.findViewById(R.id.routeStopName);
-            holder.timetableView = (TextView) row.findViewById(R.id.btnGetTimeTable);
+            //holder.timetableView = (TextView) row.findViewById(R.id.btnGetTimeTable);
 
             row.setTag(holder);
         } else {
@@ -49,9 +49,8 @@ class RouteStopListAdapter extends ArrayAdapter<RouteStop> {
         return row;
     }
 
-    static class RouteStopHolder
-        {
-            TextView nameView;
-            TextView timetableView;
-        }
+    static class RouteStopHolder {
+        TextView nameView;
+        TextView timetableView;
+    }
 }

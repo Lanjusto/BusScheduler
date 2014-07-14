@@ -4,9 +4,18 @@
     <string name="OnWeekend">По выходным</string>
     <string name="OnWorkDays">По будням</string>
     <string name="Now">Ближайшие</string>
+    <string name="East">На восток</string>
+    <string name="West">На запад</string>
+    <string name="South">На юг</string>
+    <string name="North">На север</string>
+    <string name="ToCenter">В центр</string>
+    <string name="ToSuburbs">Из центра</string>
     <string name="SearchActivity.Title">Поиск</string>
     <string name="Menu.Favorites">Избранное</string>
     <string name="Menu.Search">Поиск</string>
     <string name="Menu.Preferences">Настройки</string>
     <string name="LocateButton">Текущее расположение</string>
+    <string name="Disclaimer">
+        <u>Этим вашим расписаниям вообще можно доверять?</u>
+    </string>
 </resources>
