@@ -2,6 +2,10 @@ package ru.lanjusto.busscheduler.common.model;
 
 import com.google.common.base.Strings;
 import ru.lanjusto.busscheduler.common.utils.Assert;
+import ru.lanjusto.busscheduler.common.utils.Formatter;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * Время
@@ -25,6 +29,12 @@ public class Time {
 
         this.hours = hours;
         this.minutes = minutes;
+    }
+
+    public static Time now() {
+        //TODO поставить часовой пояс в зависимость от настроенного города
+        final Calendar c = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
+        return new Time(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
     }
 
     public int getHours() {
@@ -67,6 +77,14 @@ public class Time {
         return time.getHours() * MINUTES_IN_HOUR + time.getMinutes();
     }
 
+    public boolean isZero() {
+        return getHours() == 0 && getMinutes() == 0;
+    }
+
+    public static Time inverse(Time t) {
+        return Time.fromString("00:00").substract(t);
+    }
+
     public static Time fromMinutes(int minutes) {
         final int h = minutes / MINUTES_IN_HOUR;
         final int m = minutes - h * MINUTES_IN_HOUR;
@@ -105,5 +123,15 @@ public class Time {
     public String toString() {
         return Strings.padStart(String.valueOf(getHours()), 2, '0') + ":" +
                Strings.padStart(String.valueOf(getMinutes()), 2, '0');
+    }
+
+    public String toHumanString() {
+        if (getHours() == 0) {
+            return Formatter.getMinutes(getMinutes());
+        } else if (getMinutes() == 0) {
+            return Formatter.getHours(getHours());
+        } else {
+            return Formatter.getHours(getHours()) + " " + Formatter.getMinutes(getMinutes());
+        }
     }
 }

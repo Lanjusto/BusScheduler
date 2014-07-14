@@ -4,10 +4,13 @@ package ru.lanjusto.busscheduler.client;
 import android.os.AsyncTask;
 import com.thoughtworks.xstream.XStream;
 import org.restlet.resource.ClientResource;
+import ru.lanjusto.busscheduler.android.StopScheduleItem;
 import ru.lanjusto.busscheduler.common.model.RouteStop;
+import ru.lanjusto.busscheduler.common.model.Time;
 import ru.lanjusto.busscheduler.common.utils.CommonData;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -50,6 +53,17 @@ public class Client {
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<StopScheduleItem> getStopScheduleItems() {
+        final List<StopScheduleItem> stopScheduleItems = new ArrayList<StopScheduleItem>();
+        stopScheduleItems.add(new StopScheduleItem(new Time(1, 52), "A Н1", "Аэропорт «Шереметьево»—Терминал B"));
+        stopScheduleItems.add(new StopScheduleItem(new Time(2, 22), "A Н1", "Аэропорт «Шереметьево»—Терминал B"));
+        stopScheduleItems.add(new StopScheduleItem(new Time(2, 52), "A Н1", "Аэропорт «Шереметьево»—Терминал B"));
+        stopScheduleItems.add(new StopScheduleItem(new Time(3, 22), "A Н1", "Аэропорт «Шереметьево»—Терминал B"));
+        stopScheduleItems.add(new StopScheduleItem(new Time(3, 52), "A Н1", "Аэропорт «Шереметьево»—Терминал B"));
+        stopScheduleItems.add(new StopScheduleItem(new Time(5, 16), "Тб 20", "Серебряный бор"));
+        return stopScheduleItems;
     }
 
 
