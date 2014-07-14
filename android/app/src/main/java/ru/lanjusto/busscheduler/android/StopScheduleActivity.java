@@ -1,6 +1,5 @@
 package ru.lanjusto.busscheduler.android;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +10,7 @@ import ru.lanjusto.busscheduler.common.model.Time;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StopScheduleActivity extends Activity {
+public class StopScheduleActivity extends Menu {
     /**
      * Called when the activity is first created.
      */
@@ -19,6 +18,9 @@ public class StopScheduleActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.stop_schedule);
+
+        // Меню
+        setupMenu();
 
         // находим список
         final ListView lstStopSchedule = (ListView) findViewById(R.id.lstStopSchedule);

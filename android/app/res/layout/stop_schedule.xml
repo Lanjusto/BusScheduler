@@ -93,7 +93,8 @@
             android:layout_marginTop="7dp"
             android:textColor="@color/link"
             />
-    <include layout="@layout/menu"
+    <include android:id="@+id/menu"
+             layout="@layout/menu"
              android:layout_width="fill_parent"
              android:layout_height="wrap_content" />
 </LinearLayout>
