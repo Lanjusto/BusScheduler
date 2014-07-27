@@ -1,10 +1,10 @@
 package ru.lanjusto.busscheduler.common.model;
 
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +30,7 @@ public class Stop {
 
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL)
+    @XStreamOmitField
     private List<RouteStop> routeStops = new ArrayList<RouteStop>();
 
     @Column(name = "city", nullable = false)

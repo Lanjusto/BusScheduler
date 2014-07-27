@@ -5,8 +5,11 @@ import android.os.AsyncTask;
 import com.thoughtworks.xstream.XStream;
 import org.restlet.resource.ClientResource;
 import ru.lanjusto.busscheduler.android.StopScheduleItem;
+import ru.lanjusto.busscheduler.common.model.City;
+import ru.lanjusto.busscheduler.common.model.Route;
 import ru.lanjusto.busscheduler.common.model.RouteStop;
 import ru.lanjusto.busscheduler.common.model.Time;
+import ru.lanjusto.busscheduler.common.model.VehicleType;
 import ru.lanjusto.busscheduler.common.utils.CommonData;
 
 import java.io.IOException;
@@ -15,6 +18,16 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class Client {
+    public Route getRouteByNum(String routeNum) {
+        //TODO
+        return new Route(VehicleType.TROLLEYBUS, routeNum, "Вагоноремонтная улица — Белорусский вокзал", City.MOSCOW, "", "");
+    }
+
+    private Route getRouteById(long routeId) {
+        //TODO
+        return new Route(VehicleType.TROLLEYBUS, "", "Вагоноремонтная улица — Белорусский вокзал", City.MOSCOW, "", "");
+    }
+
     public List<RouteStop> getRouteStops(final long routeId) throws DataIsNotAvailableException {
         //TODO выделить потомок AsyncTask, который будет использоваться всегда и в методах
         //TODO before и after определять ожидание в UI. Всякий раз одинаковое

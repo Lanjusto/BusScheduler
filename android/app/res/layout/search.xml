@@ -24,7 +24,7 @@
         <EditText android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
-                  android:inputType="text"
+                  android:inputType="textCapSentences"
                   android:layout_marginLeft="40dp">
             <requestFocus />
         </EditText>
@@ -40,7 +40,7 @@
         <EditText android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
-                  android:inputType="text"
+                  android:inputType="textCapSentences"
                   android:layout_marginLeft="40dp">
             <requestFocus />
         </EditText>
@@ -62,7 +62,7 @@
         <EditText android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
-                  android:inputType="text"
+                  android:inputType="textCapSentences"
                   android:layout_marginLeft="40dp">
         </EditText>
         <ImageButton android:layout_width="wrap_content"
@@ -80,10 +80,12 @@
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:layout_weight="1">
-        <EditText android:layout_width="0dp"
+        <EditText android:id="@+id/txtRouteNum"
+                  android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
                   android:inputType="text"
+                  android:imeOptions="actionSearch"
                   android:layout_marginLeft="40dp">
         </EditText>
         <ImageButton android:layout_width="wrap_content"
@@ -94,4 +96,10 @@
     <include layout="@layout/menu"
              android:layout_width="fill_parent"
              android:layout_height="wrap_content" />
+    <android.inputmethodservice.KeyboardView android:id="@+id/routeNumKbd"
+                                             android:layout_width="fill_parent"
+                                             android:layout_height="wrap_content"
+                                             android:focusable="true"
+                                             android:focusableInTouchMode="true"
+                                             android:visibility="gone" />
 </LinearLayout>

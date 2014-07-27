@@ -5,18 +5,16 @@
               android:layout_height="fill_parent"
         >
     <TextView
+            android:id="@+id/routeNum"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/routeNum"
-            android:text="Троллейбус 78"
-            android:textSize="45sp"
+            android:textSize="36sp"
             />
     <TextView
+            android:id="@+id/routeCaption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/routeCaption"
-            android:text="Белорусский вокзал — Вагоноремонтная улица"
-            android:textSize="25sp"
+            android:textSize="24sp"
             />
     <ListView
             android:id="@+id/routeStopList"

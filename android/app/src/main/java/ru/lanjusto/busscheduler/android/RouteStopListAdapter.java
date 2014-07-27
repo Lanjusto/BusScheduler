@@ -35,7 +35,7 @@ class RouteStopListAdapter extends ArrayAdapter<RouteStop> {
 
             holder = new RouteStopHolder();
             holder.nameView = (TextView) row.findViewById(R.id.routeStopName);
-            //holder.timetableView = (TextView) row.findViewById(R.id.btnGetTimeTable);
+            holder.txtMemo = (TextView) row.findViewById(R.id.txtMemo);
 
             row.setTag(holder);
         } else {
@@ -44,13 +44,18 @@ class RouteStopListAdapter extends ArrayAdapter<RouteStop> {
 
         final RouteStop routeStop = data.get(position);
         holder.nameView.setText(routeStop.getStop().getName());
-        holder.timetableView.setText("Расписание");
+        if (Math.random() < 0.2) {
+            //TODO
+            holder.txtMemo.setText("Только по сказочным дням");
+        } else {
+            holder.txtMemo.setText("");
+        }
 
         return row;
     }
 
     static class RouteStopHolder {
         TextView nameView;
-        TextView timetableView;
+        TextView txtMemo;
     }
 }

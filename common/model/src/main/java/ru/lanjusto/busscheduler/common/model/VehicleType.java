@@ -4,13 +4,23 @@ package ru.lanjusto.busscheduler.common.model;
  * Тип транспорта
  */
 public enum VehicleType {
-    BUS,
+    BUS("Автобус"),
 
-    TROLLEYBUS,
+    TROLLEYBUS("Троллейбус"),
 
-    TRAM,
+    TRAM("Трамвай"),
 
-    MINIBUS,
+    MINIBUS("Маршрутное такси"),
 
-    AQUABUS
+    AQUABUS("Речной трамвай");
+
+    private final String image;
+
+    VehicleType(String image) {
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
 }

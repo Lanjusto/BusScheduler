@@ -49,7 +49,7 @@ public class Route {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
 
-    /***
+    /**
      * Источник получения данных о маршруте. Нужно чтобы 2 источника не "перекрывались", ну и для истории
      */
     @Column(name = "source", nullable = false)
@@ -159,6 +159,10 @@ public class Route {
         return getVehicleType() + " " + getNum();
     }
 
+    public String getImage() {
+        return getVehicleType().getImage() + " " + getNum();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -189,5 +193,9 @@ public class Route {
         int result = vehicleType.hashCode();
         result = 31 * result + num.hashCode();
         return result;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
